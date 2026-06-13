@@ -1,11 +1,11 @@
 {
-  "generated": "2026-06-12T15:28:52Z",
+  "generated": "2026-06-13T10:03:05Z",
   "image": "papra",
   "tags": {
     "latest": {
       "app_version": "26.5.0",
       "arch": "amd64",
-      "generated": "2026-06-12T15:27:35Z",
+      "generated": "2026-06-13T10:01:50Z",
       "packages": {
         "dotnet": [],
         "freebsd": [
@@ -23,7 +23,7 @@
           },
           {
             "name": "FreeBSD-certctl",
-            "version": "15.0"
+            "version": "15.0p10"
           },
           {
             "name": "FreeBSD-clibs",
@@ -35,15 +35,15 @@
           },
           {
             "name": "FreeBSD-fetch",
-            "version": "15.0"
+            "version": "15.0p10"
           },
           {
             "name": "FreeBSD-kerberos-lib",
-            "version": "15.0"
+            "version": "15.0p10"
           },
           {
             "name": "FreeBSD-libarchive",
-            "version": "15.0"
+            "version": "15.0p10"
           },
           {
             "name": "FreeBSD-libbsdstat",
@@ -59,7 +59,7 @@
           },
           {
             "name": "FreeBSD-libldns",
-            "version": "15.0"
+            "version": "15.0p10"
           },
           {
             "name": "FreeBSD-libmagic",
@@ -79,15 +79,15 @@
           },
           {
             "name": "FreeBSD-openssl",
-            "version": "15.0p2"
+            "version": "15.0p10"
           },
           {
             "name": "FreeBSD-openssl-lib",
-            "version": "15.0p2"
+            "version": "15.0p10"
           },
           {
             "name": "FreeBSD-pkg-bootstrap",
-            "version": "15.0"
+            "version": "15.0p10"
           },
           {
             "name": "FreeBSD-rc",
@@ -95,7 +95,7 @@
           },
           {
             "name": "FreeBSD-runtime",
-            "version": "15.0p9"
+            "version": "15.0p10"
           },
           {
             "name": "FreeBSD-tcpd",
@@ -107,7 +107,7 @@
           },
           {
             "name": "FreeBSD-utilities",
-            "version": "15.0p9"
+            "version": "15.0p10"
           },
           {
             "name": "FreeBSD-xz-lib",
@@ -115,7 +115,7 @@
           },
           {
             "name": "FreeBSD-zfs-lib",
-            "version": "15.0"
+            "version": "15.0p10"
           },
           {
             "name": "FreeBSD-zlib",
@@ -143,7 +143,7 @@
           },
           {
             "name": "corepack",
-            "version": "0.34.6"
+            "version": "0.35.0"
           },
           {
             "name": "curl",
@@ -171,7 +171,7 @@
           },
           {
             "name": "gettext-runtime",
-            "version": "1.0"
+            "version": "1.0_1"
           },
           {
             "name": "giflib",
@@ -179,7 +179,7 @@
           },
           {
             "name": "glib",
-            "version": "2.84.4,2"
+            "version": "2.86.4,2"
           },
           {
             "name": "googletest",
@@ -223,11 +223,11 @@
           },
           {
             "name": "lerc",
-            "version": "4.0.0"
+            "version": "4.1.0"
           },
           {
             "name": "libX11",
-            "version": "1.8.13,1"
+            "version": "1.8.13_1,1"
           },
           {
             "name": "libXau",
@@ -239,7 +239,7 @@
           },
           {
             "name": "libXext",
-            "version": "1.3.6,1"
+            "version": "1.3.7,1"
           },
           {
             "name": "libXft",
@@ -255,7 +255,7 @@
           },
           {
             "name": "libarchive",
-            "version": "3.8.5,1"
+            "version": "3.8.7,1"
           },
           {
             "name": "libdatrie",
@@ -267,11 +267,15 @@
           },
           {
             "name": "libedit",
-            "version": "3.1.20251016_1,1"
+            "version": "3.1.20260512,1"
           },
           {
             "name": "libffi",
-            "version": "3.5.1"
+            "version": "3.5.2"
+          },
+          {
+            "name": "libfmt",
+            "version": "12.1.0"
           },
           {
             "name": "libiconv",
@@ -287,7 +291,7 @@
           },
           {
             "name": "libnghttp2",
-            "version": "1.68.1"
+            "version": "1.69.0"
           },
           {
             "name": "libnghttp3",
@@ -315,23 +319,31 @@
           },
           {
             "name": "libuv",
-            "version": "1.52.0"
+            "version": "1.52.1"
           },
           {
             "name": "libxcb",
             "version": "1.17.0"
           },
           {
+            "name": "lief",
+            "version": "0.17.6"
+          },
+          {
             "name": "llhttp",
-            "version": "9.3.1"
+            "version": "9.4.1"
           },
           {
             "name": "lzo2",
-            "version": "2.10_1"
+            "version": "2.10_2"
+          },
+          {
+            "name": "mbedtls3",
+            "version": "3.6.6"
           },
           {
             "name": "merve",
-            "version": "1.2.0_1"
+            "version": "1.2.2_1"
           },
           {
             "name": "mpdecimal",
@@ -339,15 +351,15 @@
           },
           {
             "name": "nbytes",
-            "version": "0.1.3"
+            "version": "0.1.4"
           },
           {
             "name": "nginx",
-            "version": "1.30.2,3"
+            "version": "1.30.2_2,3"
           },
           {
-            "name": "node24",
-            "version": "24.14.1"
+            "name": "node26",
+            "version": "26.2.0"
           },
           {
             "name": "oniguruma",
@@ -363,19 +375,19 @@
           },
           {
             "name": "pixman",
-            "version": "0.46.2"
+            "version": "0.46.4"
           },
           {
             "name": "pkg",
-            "version": "2.6.2_1"
+            "version": "2.7.5"
           },
           {
             "name": "png",
-            "version": "1.6.57"
+            "version": "1.6.58"
           },
           {
             "name": "py311-packaging",
-            "version": "26.0"
+            "version": "26.2"
           },
           {
             "name": "python311",
@@ -391,19 +403,23 @@
           },
           {
             "name": "simdjson",
-            "version": "4.5.0"
+            "version": "4.6.4"
           },
           {
             "name": "simdutf",
-            "version": "8.2.0"
+            "version": "9.0.0"
           },
           {
             "name": "skalibs",
             "version": "2.14.5.1"
           },
           {
+            "name": "spdlog",
+            "version": "1.17.0"
+          },
+          {
             "name": "sqlite3",
-            "version": "3.50.4_2,1"
+            "version": "3.53.1,1"
           },
           {
             "name": "tesseract",
@@ -427,11 +443,11 @@
           },
           {
             "name": "xorgproto",
-            "version": "2024.1"
+            "version": "2025.1"
           },
           {
             "name": "zstd",
-            "version": "1.5.7_1"
+            "version": "1.5.7_2"
           }
         ],
         "go": [
@@ -484,7 +500,7 @@
           },
           {
             "name": "@aws-sdk/client-s3",
-            "version": "3.1066.0"
+            "version": "3.1067.0"
           },
           {
             "name": "@aws-sdk/core",
@@ -524,7 +540,7 @@
           },
           {
             "name": "@aws-sdk/lib-storage",
-            "version": "3.1066.0"
+            "version": "3.1067.0"
           },
           {
             "name": "@aws-sdk/middleware-flexible-checksums",
@@ -784,7 +800,7 @@
           },
           {
             "name": "@nodable/entities",
-            "version": "2.1.1"
+            "version": "2.2.0"
           },
           {
             "name": "@opentelemetry/semantic-conventions",
@@ -971,10 +987,6 @@
             "version": "1.5.1"
           },
           {
-            "name": "beep-boop",
-            "version": "1.2.3"
-          },
-          {
             "name": "better-auth",
             "version": "1.6.11"
           },
@@ -983,20 +995,8 @@
             "version": "1.3.5"
           },
           {
-            "name": "better-sqlite3",
-            "version": "11.10.0"
-          },
-          {
             "name": "bignumber.js",
             "version": "9.3.1"
-          },
-          {
-            "name": "bindings",
-            "version": "1.5.0"
-          },
-          {
-            "name": "bl",
-            "version": "4.1.0"
           },
           {
             "name": "bmp-js",
@@ -1039,10 +1039,6 @@
             "version": "5.0.0"
           },
           {
-            "name": "chownr",
-            "version": "1.1.4"
-          },
-          {
             "name": "confbox",
             "version": "0.2.4"
           },
@@ -1052,7 +1048,7 @@
           },
           {
             "name": "corepack",
-            "version": "0.34.6"
+            "version": "0.35.0"
           },
           {
             "name": "cron-parser",
@@ -1065,14 +1061,6 @@
           {
             "name": "debug",
             "version": "4.4.3"
-          },
-          {
-            "name": "decompress-response",
-            "version": "6.0.0"
-          },
-          {
-            "name": "deep-extend",
-            "version": "0.6.0"
           },
           {
             "name": "deepmerge",
@@ -1123,10 +1111,6 @@
             "version": "1.0.1"
           },
           {
-            "name": "end-of-stream",
-            "version": "1.4.5"
-          },
-          {
             "name": "entities",
             "version": "4.5.0"
           },
@@ -1171,10 +1155,6 @@
             "version": "3.3.0"
           },
           {
-            "name": "expand-template",
-            "version": "2.0.3"
-          },
-          {
             "name": "expect-type",
             "version": "1.3.0"
           },
@@ -1211,10 +1191,6 @@
             "version": "21.3.4"
           },
           {
-            "name": "file-uri-to-path",
-            "version": "1.0.0"
-          },
-          {
             "name": "filename-reserved-regex",
             "version": "4.0.0"
           },
@@ -1225,10 +1201,6 @@
           {
             "name": "formdata-polyfill",
             "version": "4.0.10"
-          },
-          {
-            "name": "fs-constants",
-            "version": "1.0.0"
           },
           {
             "name": "function-bind",
@@ -1249,10 +1221,6 @@
           {
             "name": "giget",
             "version": "3.3.0"
-          },
-          {
-            "name": "github-from-package",
-            "version": "0.0.0"
           },
           {
             "name": "gopd",
@@ -1305,10 +1273,6 @@
           {
             "name": "inherits",
             "version": "2.0.4"
-          },
-          {
-            "name": "ini",
-            "version": "1.3.8"
           },
           {
             "name": "is-url",
@@ -1375,18 +1339,6 @@
             "version": "3.0.2"
           },
           {
-            "name": "mimic-response",
-            "version": "3.1.0"
-          },
-          {
-            "name": "minimist",
-            "version": "1.2.8"
-          },
-          {
-            "name": "mkdirp-classic",
-            "version": "0.5.3"
-          },
-          {
             "name": "ms",
             "version": "2.1.3"
           },
@@ -1397,14 +1349,6 @@
           {
             "name": "nanostores",
             "version": "1.3.0"
-          },
-          {
-            "name": "napi-build-utils",
-            "version": "2.0.0"
-          },
-          {
-            "name": "node-abi",
-            "version": "3.92.0"
           },
           {
             "name": "node-cron",
@@ -1437,10 +1381,6 @@
           {
             "name": "ohash",
             "version": "2.0.11"
-          },
-          {
-            "name": "once",
-            "version": "1.4.0"
           },
           {
             "name": "opencollective-postinstall",
@@ -1503,10 +1443,6 @@
             "version": "5.36.17"
           },
           {
-            "name": "prebuild-install",
-            "version": "7.1.3"
-          },
-          {
             "name": "prettier",
             "version": "3.8.4"
           },
@@ -1519,16 +1455,8 @@
             "version": "2.7.0"
           },
           {
-            "name": "pump",
-            "version": "3.0.4"
-          },
-          {
             "name": "qs",
             "version": "6.15.2"
-          },
-          {
-            "name": "rc",
-            "version": "1.2.8"
           },
           {
             "name": "rc9",
@@ -1631,14 +1559,6 @@
             "version": "2.0.0"
           },
           {
-            "name": "simple-concat",
-            "version": "1.0.1"
-          },
-          {
-            "name": "simple-get",
-            "version": "4.0.1"
-          },
-          {
             "name": "sisteransi",
             "version": "1.0.5"
           },
@@ -1675,10 +1595,6 @@
             "version": "1.1.1"
           },
           {
-            "name": "strip-json-comments",
-            "version": "2.0.1"
-          },
-          {
             "name": "stripe",
             "version": "17.7.0"
           },
@@ -1691,12 +1607,12 @@
             "version": "10.3.5"
           },
           {
-            "name": "tar-fs",
-            "version": "2.1.4"
+            "name": "temporal-polyfill",
+            "version": "0.3.2"
           },
           {
-            "name": "tar-stream",
-            "version": "2.2.0"
+            "name": "temporal-spec",
+            "version": "0.3.1"
           },
           {
             "name": "tesseract.js",
@@ -1741,10 +1657,6 @@
           {
             "name": "tsx",
             "version": "4.22.4"
-          },
-          {
-            "name": "tunnel-agent",
-            "version": "0.6.0"
           },
           {
             "name": "typescript",
@@ -1811,10 +1723,6 @@
             "version": "2.3.0"
           },
           {
-            "name": "wrappy",
-            "version": "1.0.2"
-          },
-          {
             "name": "ws",
             "version": "8.21.0"
           },
@@ -1847,7 +1755,7 @@
           },
           {
             "name": "packaging",
-            "version": "26.0"
+            "version": "26.2"
           }
         ],
         "ruby": [],
@@ -1856,15 +1764,15 @@
       "source": "upstream",
       "summary": {
         "dotnet": 0,
-        "freebsd": 106,
+        "freebsd": 110,
         "go": 3,
         "java": 0,
-        "node": 347,
+        "node": 320,
         "php": 0,
         "python": 2,
         "ruby": 0,
         "rust": 0,
-        "total": 458
+        "total": 435
       }
     }
   }
