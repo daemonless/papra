@@ -8,11 +8,14 @@
 # first makes it fail with "s6-supervise not running". The node commands cd into
 # /app inside their own subshell instead.
 
-# Papra targets node 26, which has the TC39 Temporal API as a global. FreeBSD's
-# node 24 only exposes it behind V8's --harmony-temporal flag. That flag is NOT
-# permitted in NODE_OPTIONS, so it must be passed directly on each node command.
+# Papra uses the TC39 Temporal global (rate-limit config). Official node26 ships
+# Temporal built-in, but FreeBSD's node26 package is compiled WITHOUT it and even
+# `--harmony-temporal` is a no-op here. So preload a spec-compliant polyfill via
+# node's --import: `temporal-polyfill/global` installs the Temporal global before
+# any app code runs. Both node commands below inherit $NODE_FLAGS. (Resolved from
+# /app/node_modules — temporal-polyfill is added as a prod dep in the Containerfile.)
 NODE=/usr/local/bin/node
-NODE_FLAGS="--harmony-temporal"
+NODE_FLAGS="--import temporal-polyfill/global"
 
 # better-auth refuses to start in production (NODE_ENV=production) with the default
 # auth secret. If the operator supplied AUTH_SECRET (compose/secrets.env), use it.

@@ -14,24 +14,17 @@ FROM ghcr.io/daemonless/base:${BASE_VERSION} AS builder
 ARG UPSTREAM_URL
 
 # Build dependencies.
-#  - node24 / npm-node24 / corepack: JS toolchain (Papra targets node26; node24 is
-#    the newest LTS in FreeBSD pkg — node26 is not yet packaged — and runs Papra fine).
+#  - node26 / npm-node26 / corepack: JS toolchain. This image uses node26's
+#    BUILT-IN `node:sqlite` for the database (see patches/database.ts), so there
+#    is NO native addon to compile — hence NO C toolchain / node-gyp / python here.
 #  - git-lite jq: clone the release tag resolved from the GitHub API.
-#  - pkgconf python3 gmake: node-gyp's build driver dependencies.
-# The daemonless base jail ships NO C toolchain and NO /usr/include, so the
-# better-sqlite3 node-gyp build needs a full FreeBSD-native toolchain. We pull the
-# pkgbase packages so everything lands in /usr/bin under the default names node-gyp
-# expects (cc, c++, ld, ar, ranlib) — no CC/CXX overrides needed:
-#  - FreeBSD-clang     → /usr/bin/cc, clang, c++, clang++
-#  - FreeBSD-lld       → /usr/bin/ld (LLVM linker)
-#  - FreeBSD-toolchain → /usr/bin/ar, nm, ranlib (the archiver; `ar: not found` fix)
-#  - FreeBSD-clibs-dev → /usr/include libc + libc++ headers and crt objects
-# All builder-stage only — discarded, does not affect the final runtime image size.
-RUN pkg update && pkg install -y \
-    node24 npm-node24 corepack \
+#
+# node26 ships only in the FreeBSD `latest` pkg branch (the stock base points at
+# `quarterly`, which tops out at node25), so switch the branch before installing.
+RUN sed -i '' -e 's,/quarterly,/latest,' /etc/pkg/FreeBSD.conf && \
+    pkg update && pkg install -y \
+    node26 npm-node26 corepack \
     git-lite jq \
-    pkgconf python3 gmake \
-    FreeBSD-clang FreeBSD-lld FreeBSD-toolchain FreeBSD-clibs-dev \
     && pkg clean -ay
 
 # Enable pnpm via corepack (Papra pins pnpm 11.1.1).
@@ -79,12 +72,13 @@ RUN for f in \
 
 # FreeBSD DB driver swap: upstream's @libsql/client file: driver loads the native
 # `libsql` package which has no FreeBSD prebuilt and no buildable source. Replace
-# the local-file path with better-sqlite3 (builds from bundled SQLite via node-gyp)
-# and add a libsql-compatible db.batch() polyfill. See patches/database.ts.
+# the local-file path with node26's built-in `node:sqlite` (driven via
+# drizzle-orm/sqlite-proxy) and add libsql-compatible db.batch()/db.run() polyfills.
+# See patches/database.ts.
 COPY patches/database.ts ./apps/papra-server/src/modules/app/database/database.ts
 
 # Companion fix: the DB health check reads a libsql-specific result shape, which
-# better-sqlite3 doesn't produce. Use a driver-agnostic query so /api/health is
+# node:sqlite doesn't produce. Use a driver-agnostic query so /api/health is
 # accurate. See patches/health-check.repository.ts.
 COPY patches/health-check.repository.ts ./apps/papra-server/src/modules/app/health-check/health-check.repository.ts
 
@@ -95,16 +89,14 @@ COPY patches/health-check.repository.ts ./apps/papra-server/src/modules/app/heal
 COPY patches/tasks-driver.registry.ts ./apps/papra-server/src/modules/tasks/drivers/tasks-driver.registry.ts
 
 # Companion fix: migration 0006 uses libSQL's non-standard `ALTER COLUMN ... TO`
-# syntax, which standard SQLite (better-sqlite3) rejects. Replace it with the
+# syntax, which standard SQLite (node:sqlite) rejects. Replace it with the
 # SQLite-supported table-rebuild recipe (same resulting schema).
 # See patches/0006-organizations-invitations-improvement.migration.ts.
 COPY patches/0006-organizations-invitations-improvement.migration.ts ./apps/papra-server/src/migrations/list/0006-organizations-invitations-improvement.migration.ts
 
-# Add better-sqlite3 to the server workspace so the patched database.ts can
-# resolve it. We edit package.json directly (rather than `pnpm add`) so the
-# install stays a single deterministic resolve. better-sqlite3 ships a SQLite
-# amalgamation it compiles from source via node-gyp — no system SQLite needed.
-RUN node -e "const f='apps/papra-server/package.json';const p=require('./'+f);p.dependencies['better-sqlite3']='^11.10.0';require('fs').writeFileSync(f,JSON.stringify(p,null,2)+'\n')"
+# No database dependency to inject: the patched database.ts uses node26's built-in
+# `node:sqlite` driven through `drizzle-orm/sqlite-proxy` (drizzle-orm is already a
+# papra dependency). Nothing to compile, no system SQLite, no node-gyp.
 
 # sharp 0.34.x ships no FreeBSD native prebuilt (its optionalDependencies cover only
 # darwin/linux/linuxmusl/win32/wasm32). sharp is statically imported by @papra/lecture
@@ -117,23 +109,17 @@ RUN node -e "const f='apps/papra-server/package.json';const p=require('./'+f);p.
 # self-contained — no system libvips and no libvips dependency chain in the image.)
 RUN node -e "const f='apps/papra-server/package.json';const p=require('./'+f);p.dependencies['@img/sharp-wasm32']='0.34.5';require('fs').writeFileSync(f,JSON.stringify(p,null,2)+'\n')"
 
-# pnpm v11 refuses to run a dependency's build scripts unless it is allow-listed,
-# and treats an ignored build as a hard error. Allow better-sqlite3 to compile its
-# native addon by appending it to the workspace allowBuilds map.
-RUN node -e "const f='pnpm-workspace.yaml';let s=require('fs').readFileSync(f,'utf8');if(!/allowBuilds:/.test(s)){s+='\nallowBuilds:\n';}s=s.replace(/allowBuilds:\n/, 'allowBuilds:\n  better-sqlite3: true\n');require('fs').writeFileSync(f,s)"
+# Papra uses the TC39 Temporal global, which official node26 ships built-in but
+# FreeBSD's node26 package is compiled WITHOUT. Add a spec-compliant polyfill as a
+# prod dep; the s6 run script preloads it via `node --import temporal-polyfill/global`
+# so Temporal exists before any app code runs. (Pure JS — nothing to compile.)
+RUN node -e "const f='apps/papra-server/package.json';const p=require('./'+f);p.dependencies['temporal-polyfill']='0.3.2';require('fs').writeFileSync(f,JSON.stringify(p,null,2)+'\n')"
 
-# Install all needed workspaces. better-sqlite3 compiles here (it is allow-listed).
+# Install all needed workspaces. No native addon compiles here — node:sqlite is
+# built into node26, and sharp uses its WebAssembly runtime (added above).
 RUN pnpm install --frozen-lockfile=false \
     --filter "@papra/app-client..." \
     --filter "@papra/app-server..."
-
-# Fail fast if the better-sqlite3 native addon didn't compile during install.
-# (pnpm's hoisted linker may place it at the workspace root rather than the
-# server package, so check both locations.) The deploy step below recompiles it
-# for the shipped /app/production tree, so no explicit rebuild is needed here.
-RUN ( test -f apps/papra-server/node_modules/better-sqlite3/build/Release/better_sqlite3.node || \
-      test -f node_modules/better-sqlite3/build/Release/better_sqlite3.node ) && \
-    echo "better-sqlite3 native addon present."
 
 # Build frontend (Vite) then server (esbuild bundle).
 RUN pnpm --filter "@papra/app-client..." run build
@@ -184,7 +170,7 @@ RUN if [ ! -f /app/production/node_modules/.bin/tsx ]; then \
 FROM ghcr.io/daemonless/base:${BASE_VERSION}
 
 ARG FREEBSD_ARCH=amd64
-ARG PACKAGES="node24 nginx tesseract tesseract-data"
+ARG PACKAGES="node26 nginx tesseract tesseract-data"
 ARG UPSTREAM_URL="https://api.github.com/repos/papra-hq/papra/releases"
 ARG UPSTREAM_JQ="[.[].tag_name | select(startswith(\"@papra/app@\"))][0] | ltrimstr(\"@papra/app@\")"
 ARG HEALTHCHECK_ENDPOINT="http://localhost:1221"
@@ -208,8 +194,10 @@ LABEL org.opencontainers.image.title="Papra" \
       io.daemonless.healthcheck-url="${HEALTHCHECK_ENDPOINT}" \
       io.daemonless.packages="${PACKAGES}"
 
-# Install runtime dependencies.
-RUN pkg update && \
+# Install runtime dependencies. node26 lives in the `latest` pkg branch (see
+# builder stage) — switch before install.
+RUN sed -i '' -e 's,/quarterly,/latest,' /etc/pkg/FreeBSD.conf && \
+    pkg update && \
     pkg install -y ${PACKAGES} && \
     mkdir -p /app /app/public /app-data/db /app-data/documents /ingestion \
              /var/log/nginx /var/run /var/tmp/nginx && \
