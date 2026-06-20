@@ -1,6 +1,7 @@
 name: papra
 
 x-daemonless:
+  class: "service"
   title: "Papra"
   icon: ":material-file-document-multiple:"
   category: "Productivity"
