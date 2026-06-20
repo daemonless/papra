@@ -1,11 +1,11 @@
 {
-  "generated": "2026-06-13T10:03:05Z",
+  "generated": "2026-06-20T12:46:24Z",
   "image": "papra",
   "tags": {
     "latest": {
       "app_version": "26.5.0",
       "arch": "amd64",
-      "generated": "2026-06-13T10:01:50Z",
+      "generated": "2026-06-20T12:45:07Z",
       "packages": {
         "dotnet": [],
         "freebsd": [
@@ -355,7 +355,7 @@
           },
           {
             "name": "nginx",
-            "version": "1.30.2_2,3"
+            "version": "1.30.2_3,3"
           },
           {
             "name": "node26",
@@ -367,7 +367,7 @@
           },
           {
             "name": "pango",
-            "version": "1.56.4_1"
+            "version": "1.57.1"
           },
           {
             "name": "pcre2",
@@ -391,7 +391,7 @@
           },
           {
             "name": "python311",
-            "version": "3.11.15_2"
+            "version": "3.11.15_3"
           },
           {
             "name": "readline",
@@ -496,83 +496,83 @@
           },
           {
             "name": "@aws-sdk/checksums",
-            "version": "3.1000.5"
+            "version": "3.1000.7"
           },
           {
             "name": "@aws-sdk/client-s3",
-            "version": "3.1067.0"
+            "version": "3.1072.0"
           },
           {
             "name": "@aws-sdk/core",
-            "version": "3.974.20"
+            "version": "3.974.22"
           },
           {
             "name": "@aws-sdk/credential-provider-env",
-            "version": "3.972.46"
-          },
-          {
-            "name": "@aws-sdk/credential-provider-http",
             "version": "3.972.48"
           },
           {
+            "name": "@aws-sdk/credential-provider-http",
+            "version": "3.972.50"
+          },
+          {
             "name": "@aws-sdk/credential-provider-ini",
-            "version": "3.972.53"
-          },
-          {
-            "name": "@aws-sdk/credential-provider-login",
-            "version": "3.972.52"
-          },
-          {
-            "name": "@aws-sdk/credential-provider-node",
             "version": "3.972.55"
           },
           {
+            "name": "@aws-sdk/credential-provider-login",
+            "version": "3.972.54"
+          },
+          {
+            "name": "@aws-sdk/credential-provider-node",
+            "version": "3.972.57"
+          },
+          {
             "name": "@aws-sdk/credential-provider-process",
-            "version": "3.972.46"
+            "version": "3.972.48"
           },
           {
             "name": "@aws-sdk/credential-provider-sso",
-            "version": "3.972.52"
+            "version": "3.972.54"
           },
           {
             "name": "@aws-sdk/credential-provider-web-identity",
-            "version": "3.972.52"
+            "version": "3.972.54"
           },
           {
             "name": "@aws-sdk/lib-storage",
-            "version": "3.1067.0"
+            "version": "3.1072.0"
           },
           {
             "name": "@aws-sdk/middleware-flexible-checksums",
-            "version": "3.974.30"
+            "version": "3.974.32"
           },
           {
             "name": "@aws-sdk/middleware-sdk-s3",
-            "version": "3.972.51"
+            "version": "3.972.53"
           },
           {
             "name": "@aws-sdk/nested-clients",
-            "version": "3.997.20"
+            "version": "3.997.22"
           },
           {
             "name": "@aws-sdk/signature-v4-multi-region",
-            "version": "3.996.34"
+            "version": "3.996.35"
           },
           {
             "name": "@aws-sdk/token-providers",
-            "version": "3.1066.0"
+            "version": "3.1071.0"
           },
           {
             "name": "@aws-sdk/types",
-            "version": "3.973.12"
+            "version": "3.973.13"
           },
           {
             "name": "@aws-sdk/util-locate-window",
-            "version": "3.965.7"
+            "version": "3.965.8"
           },
           {
             "name": "@aws-sdk/xml-builder",
-            "version": "3.972.29"
+            "version": "3.972.30"
           },
           {
             "name": "@aws/lambda-invoke-store",
@@ -732,7 +732,7 @@
           },
           {
             "name": "@emnapi/runtime",
-            "version": "1.11.0"
+            "version": "1.11.1"
           },
           {
             "name": "@esbuild-kit/core-utils",
@@ -748,7 +748,7 @@
           },
           {
             "name": "@hono/node-server",
-            "version": "2.0.4"
+            "version": "2.0.5"
           },
           {
             "name": "@img/colour",
@@ -836,11 +836,11 @@
           },
           {
             "name": "@posthog/core",
-            "version": "1.32.3"
+            "version": "1.35.2"
           },
           {
             "name": "@posthog/types",
-            "version": "1.386.3"
+            "version": "1.390.1"
           },
           {
             "name": "@react-email/render",
@@ -848,7 +848,7 @@
           },
           {
             "name": "@rollup/rollup-freebsd-x64",
-            "version": "4.61.1"
+            "version": "4.62.0"
           },
           {
             "name": "@selderee/plugin-htmlparser2",
@@ -864,15 +864,15 @@
           },
           {
             "name": "@smithy/core",
-            "version": "3.24.6"
+            "version": "3.25.1"
           },
           {
             "name": "@smithy/credential-provider-imds",
-            "version": "4.3.8"
+            "version": "4.4.1"
           },
           {
             "name": "@smithy/fetch-http-handler",
-            "version": "5.4.6"
+            "version": "5.5.1"
           },
           {
             "name": "@smithy/is-array-buffer",
@@ -880,15 +880,15 @@
           },
           {
             "name": "@smithy/node-http-handler",
-            "version": "4.7.7"
+            "version": "4.8.1"
           },
           {
             "name": "@smithy/signature-v4",
-            "version": "5.4.6"
+            "version": "5.5.1"
           },
           {
             "name": "@smithy/types",
-            "version": "4.14.3"
+            "version": "4.15.0"
           },
           {
             "name": "@smithy/util-buffer-from",
@@ -976,7 +976,7 @@
           },
           {
             "name": "anynum",
-            "version": "1.0.0"
+            "version": "1.0.1"
           },
           {
             "name": "assertion-error",
@@ -1196,7 +1196,7 @@
           },
           {
             "name": "filenamify",
-            "version": "7.0.1"
+            "version": "7.0.2"
           },
           {
             "name": "formdata-polyfill",
@@ -1236,7 +1236,7 @@
           },
           {
             "name": "hono",
-            "version": "4.12.25"
+            "version": "4.12.26"
           },
           {
             "name": "html-to-text",
@@ -1273,6 +1273,10 @@
           {
             "name": "inherits",
             "version": "2.0.4"
+          },
+          {
+            "name": "is-unsafe",
+            "version": "1.0.1"
           },
           {
             "name": "is-url",
@@ -1344,7 +1348,7 @@
           },
           {
             "name": "nanoid",
-            "version": "3.3.12"
+            "version": "3.3.13"
           },
           {
             "name": "nanostores",
@@ -1440,7 +1444,7 @@
           },
           {
             "name": "posthog-node",
-            "version": "5.36.17"
+            "version": "5.38.1"
           },
           {
             "name": "prettier",
@@ -1496,7 +1500,7 @@
           },
           {
             "name": "rollup",
-            "version": "4.61.1"
+            "version": "4.62.0"
           },
           {
             "name": "rou3",
@@ -1600,7 +1604,7 @@
           },
           {
             "name": "strnum",
-            "version": "2.4.0"
+            "version": "2.4.1"
           },
           {
             "name": "strtok3",
@@ -1672,7 +1676,7 @@
           },
           {
             "name": "undici",
-            "version": "8.4.1"
+            "version": "8.5.0"
           },
           {
             "name": "undici-types",
@@ -1767,12 +1771,12 @@
         "freebsd": 110,
         "go": 3,
         "java": 0,
-        "node": 320,
+        "node": 321,
         "php": 0,
         "python": 2,
         "ruby": 0,
         "rust": 0,
-        "total": 435
+        "total": 436
       }
     }
   }
