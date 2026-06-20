@@ -43,16 +43,16 @@ services:
       - PORT=1222  # Internal node backend port (nginx proxies to it); leave as 1222
       - SERVER_HOSTNAME=127.0.0.1  # Internal bind address for the node backend; leave as 127.0.0.1
       - SERVER_SERVE_PUBLIC_DIR=false  # Whether the node backend serves the SPA itself; 'false' (nginx serves it)
-      - DATABASE_URL=file:/app-data/db/db.sqlite  # SQLite database URL (file:/app-data/db/db.sqlite)
-      - DOCUMENT_STORAGE_FILESYSTEM_ROOT=/app-data/documents  # Filesystem path where uploaded documents are stored (under the /app-data volume)
-      - PAPRA_CONFIG_DIR=/app-data  # Directory Papra reads its config from (under the /app-data volume)
+      - DATABASE_URL=file:/app_data/db/db.sqlite  # SQLite database URL (file:/app_data/db/db.sqlite)
+      - DOCUMENT_STORAGE_FILESYSTEM_ROOT=/app_data/documents  # Filesystem path where uploaded documents are stored (under the /app_data volume)
+      - PAPRA_CONFIG_DIR=/app_data  # Directory Papra reads its config from (under the /app_data volume)
       - INGESTION_FOLDER_ROOT=/ingestion  # Watched folder for drop-in document ingestion
       - EMAILS_DRY_RUN=true  # If 'true', emails are logged instead of sent (no SMTP configured by default)
       - BETTER_AUTH_TELEMETRY=0  # better-auth telemetry; '0' disables it
-      - AUTH_SECRET=${PAPRA_AUTH_SECRET}  # better-auth session signing secret, >=32 chars. Optional: if unset, the container generates a strong secret on first boot and persists it under /app-data. Set one you control with `openssl rand -hex 48` to manage it yourself.
+      - AUTH_SECRET=${PAPRA_AUTH_SECRET}  # better-auth session signing secret, >=32 chars. Optional: if unset, the container generates a strong secret on first boot and persists it under /app_data. Set one you control with `openssl rand -hex 48` to manage it yourself.
       - AUTH_IS_REGISTRATION_ENABLED=true  # Set to false after creating your account to lock down signups
     volumes:
-      - "/path/to/containers/papra/app-data:/app-data"
+      - "/path/to/containers/papra/app_data:/app_data"
     restart: unless-stopped
 ```
 
@@ -69,9 +69,9 @@ NODE_ENV=production
 PORT=1222
 SERVER_HOSTNAME=127.0.0.1
 SERVER_SERVE_PUBLIC_DIR=false
-DATABASE_URL=file:/app-data/db/db.sqlite
-DOCUMENT_STORAGE_FILESYSTEM_ROOT=/app-data/documents
-PAPRA_CONFIG_DIR=/app-data
+DATABASE_URL=file:/app_data/db/db.sqlite
+DOCUMENT_STORAGE_FILESYSTEM_ROOT=/app_data/documents
+PAPRA_CONFIG_DIR=/app_data
 INGESTION_FOLDER_ROOT=/ingestion
 EMAILS_DRY_RUN=true
 BETTER_AUTH_TELEMETRY=0
@@ -109,10 +109,10 @@ services:
         - AUTH_SECRET: !ENV '${AUTH_SECRET}'
         - AUTH_IS_REGISTRATION_ENABLED: !ENV '${AUTH_IS_REGISTRATION_ENABLED}'
     volumes:
-      - papra_app-data: /app-data
+      - papra_app_data: /app_data
 volumes:
-  papra_app-data:
-    device: '/path/to/containers/papra/app-data'
+  papra_app_data:
+    device: '/path/to/containers/papra/app_data'
 ```
 
 **Makejail**:
@@ -135,15 +135,15 @@ podman run -d --name papra \
   -e PORT=1222 \
   -e SERVER_HOSTNAME=127.0.0.1 \
   -e SERVER_SERVE_PUBLIC_DIR=false \
-  -e DATABASE_URL=file:/app-data/db/db.sqlite \
-  -e DOCUMENT_STORAGE_FILESYSTEM_ROOT=/app-data/documents \
-  -e PAPRA_CONFIG_DIR=/app-data \
+  -e DATABASE_URL=file:/app_data/db/db.sqlite \
+  -e DOCUMENT_STORAGE_FILESYSTEM_ROOT=/app_data/documents \
+  -e PAPRA_CONFIG_DIR=/app_data \
   -e INGESTION_FOLDER_ROOT=/ingestion \
   -e EMAILS_DRY_RUN=true \
   -e BETTER_AUTH_TELEMETRY=0 \
   -e AUTH_SECRET=${PAPRA_AUTH_SECRET} \
   -e AUTH_IS_REGISTRATION_ENABLED=true \
-  -v /path/to/containers/papra/app-data:/app-data \
+  -v /path/to/containers/papra/app_data:/app_data \
   ghcr.io/daemonless/papra:latest
 ```
 
@@ -164,16 +164,16 @@ podman run -d --name papra \
       PORT: "1222"
       SERVER_HOSTNAME: "127.0.0.1"
       SERVER_SERVE_PUBLIC_DIR: "false"
-      DATABASE_URL: "file:/app-data/db/db.sqlite"
-      DOCUMENT_STORAGE_FILESYSTEM_ROOT: "/app-data/documents"
-      PAPRA_CONFIG_DIR: "/app-data"
+      DATABASE_URL: "file:/app_data/db/db.sqlite"
+      DOCUMENT_STORAGE_FILESYSTEM_ROOT: "/app_data/documents"
+      PAPRA_CONFIG_DIR: "/app_data"
       INGESTION_FOLDER_ROOT: "/ingestion"
       EMAILS_DRY_RUN: "true"
       BETTER_AUTH_TELEMETRY: "0"
       AUTH_SECRET: "${PAPRA_AUTH_SECRET}"
       AUTH_IS_REGISTRATION_ENABLED: "true"
     volumes:
-      - "/path/to/containers/papra/app-data:/app-data"
+      - "/path/to/containers/papra/app_data:/app_data"
 ```
 
 ## Parameters
@@ -189,20 +189,20 @@ podman run -d --name papra \
 | `PORT` | `1222` | Internal node backend port (nginx proxies to it); leave as 1222 |
 | `SERVER_HOSTNAME` | `127.0.0.1` | Internal bind address for the node backend; leave as 127.0.0.1 |
 | `SERVER_SERVE_PUBLIC_DIR` | `false` | Whether the node backend serves the SPA itself; 'false' (nginx serves it) |
-| `DATABASE_URL` | `file:/app-data/db/db.sqlite` | SQLite database URL (file:/app-data/db/db.sqlite) |
-| `DOCUMENT_STORAGE_FILESYSTEM_ROOT` | `/app-data/documents` | Filesystem path where uploaded documents are stored (under the /app-data volume) |
-| `PAPRA_CONFIG_DIR` | `/app-data` | Directory Papra reads its config from (under the /app-data volume) |
+| `DATABASE_URL` | `file:/app_data/db/db.sqlite` | SQLite database URL (file:/app_data/db/db.sqlite) |
+| `DOCUMENT_STORAGE_FILESYSTEM_ROOT` | `/app_data/documents` | Filesystem path where uploaded documents are stored (under the /app_data volume) |
+| `PAPRA_CONFIG_DIR` | `/app_data` | Directory Papra reads its config from (under the /app_data volume) |
 | `INGESTION_FOLDER_ROOT` | `/ingestion` | Watched folder for drop-in document ingestion |
 | `EMAILS_DRY_RUN` | `true` | If 'true', emails are logged instead of sent (no SMTP configured by default) |
 | `BETTER_AUTH_TELEMETRY` | `0` | better-auth telemetry; '0' disables it |
-| `AUTH_SECRET` | `${PAPRA_AUTH_SECRET}` | better-auth session signing secret, >=32 chars. Optional: if unset, the container generates a strong secret on first boot and persists it under /app-data. Set one you control with `openssl rand -hex 48` to manage it yourself. |
+| `AUTH_SECRET` | `${PAPRA_AUTH_SECRET}` | better-auth session signing secret, >=32 chars. Optional: if unset, the container generates a strong secret on first boot and persists it under /app_data. Set one you control with `openssl rand -hex 48` to manage it yourself. |
 | `AUTH_IS_REGISTRATION_ENABLED` | `true` | Set to false after creating your account to lock down signups |
 
 ### Volumes
 
 | Path | Description |
 |------|-------------|
-| `/app-data` | Application data — SQLite database, stored documents, and config |
+| `/app_data` | Application data — SQLite database, stored documents, and config |
 
 **Architectures:** amd64
 **User:** `bsd` (UID/GID via PUID/PGID, defaults to 1000:1000)

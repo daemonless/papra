@@ -193,7 +193,7 @@ LABEL org.opencontainers.image.title="Papra" \
       org.opencontainers.image.authors="daemonless" \
       io.daemonless.category="Productivity" \
       io.daemonless.port="1221" \
-      io.daemonless.volumes="/app-data" \
+      io.daemonless.volumes="/app_data" \
       io.daemonless.arch="${FREEBSD_ARCH}" \
       io.daemonless.upstream-url="${UPSTREAM_URL}" \
       io.daemonless.upstream-jq="${UPSTREAM_JQ}" \
@@ -205,7 +205,7 @@ LABEL org.opencontainers.image.title="Papra" \
 RUN sed -i '' -e 's,/quarterly,/latest,' /etc/pkg/FreeBSD.conf && \
     pkg update && \
     pkg install -y ${PACKAGES} && \
-    mkdir -p /app /app/public /app-data/db /app-data/documents /ingestion \
+    mkdir -p /app /app/public /app_data/db /app_data/documents /ingestion \
              /var/log/nginx /var/run /var/tmp/nginx && \
     pkg clean -ay && \
     rm -rf /var/cache/pkg/* /var/db/pkg/repos/*
@@ -217,7 +217,7 @@ COPY --from=builder --chown=bsd:bsd /build/apps/papra-client/dist /app/public
 
 # Ownership — /app and /app/public must be world-readable so the nginx worker
 # (www user) can serve the static client files.
-RUN chown -R bsd:bsd /app /app-data /ingestion && \
+RUN chown -R bsd:bsd /app /app_data /ingestion && \
     chmod o+x /app && \
     chmod -R o+rX /app/public
 
@@ -236,9 +236,9 @@ ENV NODE_ENV=production \
     PORT=1222 \
     SERVER_HOSTNAME=127.0.0.1 \
     SERVER_SERVE_PUBLIC_DIR=false \
-    DATABASE_URL=file:/app-data/db/db.sqlite \
-    DOCUMENT_STORAGE_FILESYSTEM_ROOT=/app-data/documents \
-    PAPRA_CONFIG_DIR=/app-data \
+    DATABASE_URL=file:/app_data/db/db.sqlite \
+    DOCUMENT_STORAGE_FILESYSTEM_ROOT=/app_data/documents \
+    PAPRA_CONFIG_DIR=/app_data \
     INGESTION_FOLDER_ROOT=/ingestion \
     EMAILS_DRY_RUN=true \
     BETTER_AUTH_TELEMETRY=0 \
@@ -246,4 +246,4 @@ ENV NODE_ENV=production \
 
 EXPOSE 1221
 
-VOLUME /app-data
+VOLUME /app_data
