@@ -22,10 +22,10 @@ NODE_FLAGS="--import temporal-polyfill/global"
 # Otherwise generate a strong random secret ONCE and persist it under the data volume
 # so sessions survive restarts — keeps the image secure-by-default and bootable
 # standalone (no hardcoded secret shipped; also lets CIT run the bare image).
-SECRET_FILE=/app-data/.auth_secret
+SECRET_FILE=/app_data/.auth_secret
 if [ -z "${AUTH_SECRET:-}" ]; then
     if [ ! -s "$SECRET_FILE" ]; then
-        mkdir -p /app-data
+        mkdir -p /app_data
         $NODE -e 'process.stdout.write(require("crypto").randomBytes(48).toString("hex"))' > "$SECRET_FILE"
         chmod 600 "$SECRET_FILE"
         chown bsd:bsd "$SECRET_FILE" 2>/dev/null || true

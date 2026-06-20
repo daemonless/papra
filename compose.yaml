@@ -17,20 +17,20 @@ x-daemonless:
       PUID: "User ID for the application process"
       PGID: "Group ID for the application process"
       TZ: "Timezone for the container"
-      AUTH_SECRET: "better-auth session signing secret, >=32 chars. Optional: if unset, the container generates a strong secret on first boot and persists it under /app-data. Set one you control with `openssl rand -hex 48` to manage it yourself."
-      DATABASE_URL: "SQLite database URL (file:/app-data/db/db.sqlite)"
+      AUTH_SECRET: "better-auth session signing secret, >=32 chars. Optional: if unset, the container generates a strong secret on first boot and persists it under /app_data. Set one you control with `openssl rand -hex 48` to manage it yourself."
+      DATABASE_URL: "SQLite database URL (file:/app_data/db/db.sqlite)"
       AUTH_IS_REGISTRATION_ENABLED: "Set to false after creating your account to lock down signups"
       NODE_ENV: "Node runtime mode; leave as 'production'"
       PORT: "Internal node backend port (nginx proxies to it); leave as 1222"
       SERVER_HOSTNAME: "Internal bind address for the node backend; leave as 127.0.0.1"
       SERVER_SERVE_PUBLIC_DIR: "Whether the node backend serves the SPA itself; 'false' (nginx serves it)"
-      DOCUMENT_STORAGE_FILESYSTEM_ROOT: "Filesystem path where uploaded documents are stored (under the /app-data volume)"
-      PAPRA_CONFIG_DIR: "Directory Papra reads its config from (under the /app-data volume)"
+      DOCUMENT_STORAGE_FILESYSTEM_ROOT: "Filesystem path where uploaded documents are stored (under the /app_data volume)"
+      PAPRA_CONFIG_DIR: "Directory Papra reads its config from (under the /app_data volume)"
       INGESTION_FOLDER_ROOT: "Watched folder for drop-in document ingestion"
       EMAILS_DRY_RUN: "If 'true', emails are logged instead of sent (no SMTP configured by default)"
       BETTER_AUTH_TELEMETRY: "better-auth telemetry; '0' disables it"
     volumes:
-      /app-data: "Application data — SQLite database, stored documents, and config"
+      /app_data: "Application data — SQLite database, stored documents, and config"
     ports:
       1221: "Web UI (nginx serving the SPA + reverse-proxying /api/ to the node backend)"
 
@@ -50,17 +50,17 @@ services:
       - PORT=1222
       - SERVER_HOSTNAME=127.0.0.1
       - SERVER_SERVE_PUBLIC_DIR=false
-      - DATABASE_URL=file:/app-data/db/db.sqlite
-      - DOCUMENT_STORAGE_FILESYSTEM_ROOT=/app-data/documents
-      - PAPRA_CONFIG_DIR=/app-data
+      - DATABASE_URL=file:/app_data/db/db.sqlite
+      - DOCUMENT_STORAGE_FILESYSTEM_ROOT=/app_data/documents
+      - PAPRA_CONFIG_DIR=/app_data
       - INGESTION_FOLDER_ROOT=/ingestion
       - EMAILS_DRY_RUN=true
       - BETTER_AUTH_TELEMETRY=0
       # Optional: a secret you control (>=32 chars). If omitted, the container
-      # generates one on first boot and persists it under /app-data (secure-by-default).
+      # generates one on first boot and persists it under /app_data (secure-by-default).
       - AUTH_SECRET=${PAPRA_AUTH_SECRET}
       # Lock down registration after you create the first (admin) account.
       - AUTH_IS_REGISTRATION_ENABLED=true
 
     volumes:
-      - ./app-data:/app-data
+      - ./app_data:/app_data

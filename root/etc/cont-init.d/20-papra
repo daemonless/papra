@@ -1,7 +1,7 @@
 #!/bin/sh
 echo "[init] Initializing Papra..."
 
-mkdir -p /app-data/db /app-data/documents /ingestion
-chown -R bsd:bsd /app-data /ingestion
+mkdir -p /app_data/db /app_data/documents /ingestion
+chown -R bsd:bsd /app_data /ingestion
 
 echo "[init] Done"
