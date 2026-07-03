@@ -136,8 +136,11 @@ RUN pnpm --filter=@papra/app-server --prod --legacy deploy /app/production
 # lazy `canvasImport: async () => canvas` hook. We make the import itself lazy
 # (dynamic `import()` inside that hook) so the server boots normally; only
 # scanned-PDF OCR degrades on FreeBSD (it throws a catchable error at use, not at
-# boot). Guarded: the build fails if upstream changes the pattern (patch drift).
-RUN node -e "const fs=require('fs');const f='/app/production/node_modules/@papra/lecture/dist/index.js';let s=fs.readFileSync(f,'utf8');const imp='import canvas from \"@napi-rs/canvas\";';const use='canvasImport: async () => canvas,';if(!s.includes(imp)||!s.includes(use)){console.error('PATCH DRIFT: @papra/lecture canvas pattern not found; review the lazy-canvas patch');process.exit(1);}s=s.replace(imp,'').replace(use,'canvasImport: async () => (await import(\"@napi-rs/canvas\")).default,');if(s.includes(imp)){console.error('PATCH FAILED: static canvas import still present');process.exit(1);}fs.writeFileSync(f,s);console.log('Patched @papra/lecture: @napi-rs/canvas import is now lazy.');"
+# boot). Guarded: the entry file is resolved from the package's `exports` map (with
+# `module`/`main` fallbacks) so a renamed build output — e.g. dist/index.js ->
+# dist/index.mjs in @papra/lecture 0.5.1 — no longer breaks the patch, and the build
+# still fails loudly if upstream changes the canvas pattern itself (patch drift).
+RUN node -e "const fs=require('fs'),path=require('path');const dir='/app/production/node_modules/@papra/lecture';const pkg=JSON.parse(fs.readFileSync(path.join(dir,'package.json'),'utf8'));let e=pkg.exports&&pkg.exports['.'];if(e&&typeof e==='object')e=e.import||e.default||e.node||e.require;const rel=e||pkg.module||pkg.main||'dist/index.mjs';const f=path.join(dir,rel);let s=fs.readFileSync(f,'utf8');const imp='import canvas from \"@napi-rs/canvas\";';const use='canvasImport: async () => canvas,';if(!s.includes(imp)||!s.includes(use)){console.error('PATCH DRIFT: @papra/lecture canvas pattern not found in '+rel+'; review the lazy-canvas patch');process.exit(1);}s=s.replace(imp,'').replace(use,'canvasImport: async () => (await import(\"@napi-rs/canvas\")).default,');if(s.includes(imp)){console.error('PATCH FAILED: static canvas import still present');process.exit(1);}fs.writeFileSync(f,s);console.log('Patched @papra/lecture ('+rel+'): @napi-rs/canvas import is now lazy.');"
 
 # Verify the sharp wasm fallback deployed and that our pin still matches the resolved
 # sharp version (sharp loads @img/sharp-wasm32 only if their versions match exactly).
