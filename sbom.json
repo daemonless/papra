@@ -1,11 +1,11 @@
 {
-  "generated": "2026-07-18T12:41:47Z",
+  "generated": "2026-07-28T20:25:52Z",
   "image": "papra",
   "tags": {
     "latest": {
       "app_version": "26.6.1",
       "arch": "amd64",
-      "generated": "2026-07-18T12:40:28Z",
+      "generated": "2026-07-28T20:24:31Z",
       "packages": {
         "dotnet": [],
         "freebsd": [
@@ -70,6 +70,10 @@
             "version": "15.0"
           },
           {
+            "name": "FreeBSD-locales",
+            "version": "15.0"
+          },
+          {
             "name": "FreeBSD-mtree",
             "version": "15.0"
           },
@@ -131,7 +135,7 @@
           },
           {
             "name": "c-ares",
-            "version": "1.34.6"
+            "version": "1.34.8"
           },
           {
             "name": "ca_root_nss",
@@ -175,7 +179,7 @@
           },
           {
             "name": "giflib",
-            "version": "5.2.2"
+            "version": "6.1.3"
           },
           {
             "name": "glib",
@@ -223,7 +227,7 @@
           },
           {
             "name": "lerc",
-            "version": "4.1.0"
+            "version": "4.1.1"
           },
           {
             "name": "libX11",
@@ -255,7 +259,7 @@
           },
           {
             "name": "libarchive",
-            "version": "3.8.7,1"
+            "version": "3.8.8,1"
           },
           {
             "name": "libdatrie",
@@ -271,7 +275,7 @@
           },
           {
             "name": "libffi",
-            "version": "3.6.0"
+            "version": "3.7.1"
           },
           {
             "name": "libfmt",
@@ -355,11 +359,11 @@
           },
           {
             "name": "nginx",
-            "version": "1.30.3_2,3"
+            "version": "1.30.4,3"
           },
           {
             "name": "node26",
-            "version": "26.4.0"
+            "version": "26.5.0"
           },
           {
             "name": "oniguruma",
@@ -379,7 +383,7 @@
           },
           {
             "name": "pkg",
-            "version": "2.7.5"
+            "version": "2.8.1_1"
           },
           {
             "name": "png",
@@ -431,7 +435,7 @@
           },
           {
             "name": "tiff",
-            "version": "4.7.1_1"
+            "version": "4.7.2"
           },
           {
             "name": "uvwasi",
@@ -636,7 +640,7 @@
           },
           {
             "name": "@emnapi/runtime",
-            "version": "1.11.2"
+            "version": "1.11.3"
           },
           {
             "name": "@esbuild-kit/core-utils",
@@ -652,7 +656,7 @@
           },
           {
             "name": "@hono/node-server",
-            "version": "2.0.10"
+            "version": "2.0.12"
           },
           {
             "name": "@img/colour",
@@ -756,11 +760,11 @@
           },
           {
             "name": "@posthog/core",
-            "version": "1.43.1"
+            "version": "1.45.1"
           },
           {
             "name": "@posthog/types",
-            "version": "1.397.0"
+            "version": "1.398.0"
           },
           {
             "name": "@react-email/render",
@@ -800,7 +804,7 @@
           },
           {
             "name": "@tanstack/ai-anthropic",
-            "version": "0.16.2"
+            "version": "0.16.3"
           },
           {
             "name": "@tanstack/ai-event-client",
@@ -1076,7 +1080,7 @@
           },
           {
             "name": "exsolve",
-            "version": "1.1.0"
+            "version": "1.1.1"
           },
           {
             "name": "fast-deep-equal",
@@ -1140,7 +1144,7 @@
           },
           {
             "name": "giget",
-            "version": "3.3.0"
+            "version": "3.3.1"
           },
           {
             "name": "gopd",
@@ -1160,7 +1164,7 @@
           },
           {
             "name": "hono",
-            "version": "4.12.30"
+            "version": "4.12.32"
           },
           {
             "name": "html-escaper",
@@ -1232,11 +1236,11 @@
           },
           {
             "name": "jose",
-            "version": "6.2.3"
+            "version": "6.2.4"
           },
           {
             "name": "js-base64",
-            "version": "3.9.1"
+            "version": "3.9.2"
           },
           {
             "name": "js-tokens",
@@ -1268,11 +1272,11 @@
           },
           {
             "name": "lightningcss",
-            "version": "1.32.0"
+            "version": "1.33.0"
           },
           {
             "name": "lightningcss-freebsd-x64",
-            "version": "1.32.0"
+            "version": "1.33.0"
           },
           {
             "name": "luxon",
@@ -1312,7 +1316,7 @@
           },
           {
             "name": "nanostores",
-            "version": "1.4.0"
+            "version": "1.4.1"
           },
           {
             "name": "node-cron",
@@ -1352,7 +1356,7 @@
           },
           {
             "name": "openai",
-            "version": "6.48.0"
+            "version": "6.49.0"
           },
           {
             "name": "opencollective-postinstall",
@@ -1360,7 +1364,7 @@
           },
           {
             "name": "p-limit",
-            "version": "7.3.0"
+            "version": "7.3.1"
           },
           {
             "name": "p-queue",
@@ -1412,15 +1416,15 @@
           },
           {
             "name": "postcss",
-            "version": "8.5.19"
+            "version": "8.5.23"
           },
           {
             "name": "posthog-node",
-            "version": "5.45.2"
+            "version": "5.46.1"
           },
           {
             "name": "prettier",
-            "version": "3.9.5"
+            "version": "3.9.6"
           },
           {
             "name": "process-nextick-args",
@@ -1660,7 +1664,7 @@
           },
           {
             "name": "undici",
-            "version": "8.7.0"
+            "version": "8.9.0"
           },
           {
             "name": "undici-types",
@@ -1668,7 +1672,7 @@
           },
           {
             "name": "unpdf",
-            "version": "1.6.2"
+            "version": "1.8.0"
           },
           {
             "name": "util-deprecate",
@@ -1752,7 +1756,7 @@
       "source": "upstream",
       "summary": {
         "dotnet": 0,
-        "freebsd": 110,
+        "freebsd": 111,
         "go": 3,
         "java": 0,
         "node": 317,
@@ -1760,7 +1764,7 @@
         "python": 2,
         "ruby": 0,
         "rust": 0,
-        "total": 432
+        "total": 433
       }
     }
   }
