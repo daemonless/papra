@@ -17,13 +17,11 @@ Minimalist self-hosted document management platform (Paperless alternative) on F
 | **Website** | [https://papra.app](https://papra.app) |
 
 ## Version Tags
-
 | Tag | Description | Best For |
 | :--- | :--- | :--- |
 | `latest` | **Upstream Binary**. Built from official release. | Most users. Matches Linux Docker behavior. |
 
 ## Prerequisites
-
 Before deploying, ensure your host environment is ready. See the [Quick Start Guide](https://daemonless.io/guides/quick-start) for host setup instructions.
 
 ## Deployment
@@ -57,10 +55,11 @@ services:
 ```
 
 ### AppJail Director
-
 **.env**:
 
 ```
+# .env
+
 DIRECTOR_PROJECT=papra
 PUID=1000
 PGID=1000
@@ -82,6 +81,8 @@ AUTH_IS_REGISTRATION_ENABLED=true
 **appjail-director.yml**:
 
 ```yaml
+# appjail-director.yml
+
 options:
   - virtualnet: ':<random> default'
   - nat:
@@ -118,6 +119,8 @@ volumes:
 **Makejail**:
 
 ```
+# Makejail
+
 ARG tag=latest
 
 OPTION overwrite=force
@@ -145,6 +148,33 @@ podman run -d --name papra \
   -e AUTH_IS_REGISTRATION_ENABLED=true \
   -v /path/to/containers/papra/app_data:/app_data \
   ghcr.io/daemonless/papra:latest
+```
+
+### AppJail
+
+```bash
+appjail oci run -Pd \
+  -o overwrite=force \
+  -o container="args:--pull" \
+  -o virtualnet=":<random> default" \
+  -o nat \
+  -e PUID=1000 \
+  -e PGID=1000 \
+  -e TZ=Etc/UTC \
+  -e NODE_ENV=production \
+  -e PORT=1222 \
+  -e SERVER_HOSTNAME=127.0.0.1 \
+  -e SERVER_SERVE_PUBLIC_DIR=false \
+  -e DATABASE_URL=file:/app_data/db/db.sqlite \
+  -e DOCUMENT_STORAGE_FILESYSTEM_ROOT=/app_data/documents \
+  -e PAPRA_CONFIG_DIR=/app_data \
+  -e INGESTION_FOLDER_ROOT=/ingestion \
+  -e EMAILS_DRY_RUN=true \
+  -e BETTER_AUTH_TELEMETRY=0 \
+  -e AUTH_SECRET=${PAPRA_AUTH_SECRET} \
+  -e AUTH_IS_REGISTRATION_ENABLED=true \
+  -o fstab="/path/to/containers/papra/app_data /app_data <pseudofs>" \
+  ghcr.io/daemonless/papra:latest papra
 ```
 
 ### Ansible
@@ -206,7 +236,7 @@ podman run -d --name papra \
 
 **Architectures:** amd64
 **User:** `bsd` (UID/GID via PUID/PGID, defaults to 1000:1000)
-**Base:** FreeBSD 15.0
+**Base:** FreeBSD 15
 
 ---
 

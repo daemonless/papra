@@ -1,11 +1,11 @@
 {
-  "generated": "2026-08-01T20:15:30Z",
+  "generated": "2026-08-10T07:39:06Z",
   "image": "papra",
   "tags": {
     "latest": {
       "app_version": "26.6.1",
       "arch": "amd64",
-      "generated": "2026-08-01T19:54:03Z",
+      "generated": "2026-08-10T07:36:28Z",
       "packages": {
         "dotnet": [],
         "freebsd": [
@@ -332,7 +332,7 @@
               "LGPL20"
             ],
             "name": "glib",
-            "version": "2.86.4,2"
+            "version": "2.88.3,2"
           },
           {
             "licenses": [
@@ -449,7 +449,7 @@
               "MIT"
             ],
             "name": "libXft",
-            "version": "2.3.8"
+            "version": "2.3.9"
           },
           {
             "licenses": [
@@ -651,7 +651,7 @@
               "BSD2CLAUSE"
             ],
             "name": "nginx",
-            "version": "1.30.4,3"
+            "version": "1.30.4_2,3"
           },
           {
             "licenses": [
@@ -737,7 +737,7 @@
               "APACHE20"
             ],
             "name": "simdjson",
-            "version": "4.6.4"
+            "version": "4.6.6"
           },
           {
             "licenses": [
@@ -911,7 +911,7 @@
           {
             "name": "@azure/storage-common",
             "purl": "",
-            "version": "12.4.1"
+            "version": "12.5.0"
           },
           {
             "name": "@babel/helper-string-parser",
@@ -1071,7 +1071,7 @@
           {
             "name": "@hono/node-server",
             "purl": "",
-            "version": "2.0.12"
+            "version": "2.1.0"
           },
           {
             "name": "@img/colour",
@@ -1136,7 +1136,7 @@
           {
             "name": "@noble/ciphers",
             "purl": "",
-            "version": "2.2.0"
+            "version": "2.3.0"
           },
           {
             "name": "@noble/hashes",
@@ -1201,12 +1201,12 @@
           {
             "name": "@posthog/core",
             "purl": "",
-            "version": "1.46.1"
+            "version": "1.46.9"
           },
           {
             "name": "@posthog/types",
             "purl": "",
-            "version": "1.399.0"
+            "version": "1.402.2"
           },
           {
             "name": "@react-email/render",
@@ -1256,7 +1256,7 @@
           {
             "name": "@tanstack/ai-anthropic",
             "purl": "",
-            "version": "0.16.3"
+            "version": "0.16.4"
           },
           {
             "name": "@tanstack/ai-event-client",
@@ -1466,7 +1466,7 @@
           {
             "name": "cron-parser",
             "purl": "",
-            "version": "5.6.1"
+            "version": "5.7.0"
           },
           {
             "name": "data-uri-to-buffer",
@@ -1676,7 +1676,7 @@
           {
             "name": "get-tsconfig",
             "purl": "",
-            "version": "4.14.0"
+            "version": "4.14.1"
           },
           {
             "name": "giget",
@@ -1706,7 +1706,7 @@
           {
             "name": "hono",
             "purl": "",
-            "version": "4.12.33"
+            "version": "4.13.1"
           },
           {
             "name": "html-escaper",
@@ -1796,7 +1796,7 @@
           {
             "name": "jose",
             "purl": "",
-            "version": "6.2.6"
+            "version": "6.2.8"
           },
           {
             "name": "js-base64",
@@ -1891,7 +1891,7 @@
           {
             "name": "nanoid",
             "purl": "",
-            "version": "3.3.16"
+            "version": "3.3.18"
           },
           {
             "name": "nanostores",
@@ -1921,7 +1921,7 @@
           {
             "name": "nodemailer",
             "purl": "",
-            "version": "9.0.3"
+            "version": "9.0.5"
           },
           {
             "name": "object-inspect",
@@ -2021,12 +2021,12 @@
           {
             "name": "postcss",
             "purl": "",
-            "version": "8.5.25"
+            "version": "8.5.26"
           },
           {
             "name": "posthog-node",
             "purl": "",
-            "version": "5.47.3"
+            "version": "5.48.1"
           },
           {
             "name": "prettier",
@@ -2076,7 +2076,7 @@
           {
             "name": "readdirp",
             "purl": "",
-            "version": "5.0.0"
+            "version": "5.1.1"
           },
           {
             "name": "regenerator-runtime",
@@ -2271,7 +2271,7 @@
           {
             "name": "tinyexec",
             "purl": "",
-            "version": "1.2.4"
+            "version": "1.3.0"
           },
           {
             "name": "tinyglobby",
@@ -2311,7 +2311,7 @@
           {
             "name": "tsx",
             "purl": "",
-            "version": "4.23.1"
+            "version": "4.23.11"
           },
           {
             "name": "typescript",
@@ -2331,7 +2331,7 @@
           {
             "name": "undici",
             "purl": "",
-            "version": "8.9.0"
+            "version": "8.10.0"
           },
           {
             "name": "undici-types",
@@ -2396,7 +2396,7 @@
           {
             "name": "ws",
             "purl": "",
-            "version": "8.21.1"
+            "version": "8.21.3"
           },
           {
             "name": "xml-naming",
