@@ -107,17 +107,12 @@ COPY patches/0006-organizations-invitations-improvement.migration.ts ./apps/papr
 # platform packages to match exactly); a post-install guard fails the build if the
 # resolved sharp version drifts from this pin. (wasm: slower than native, but
 # self-contained — no system libvips and no libvips dependency chain in the image.)
-RUN node -e "const f='apps/papra-server/package.json';const p=require('./'+f);p.dependencies['@img/sharp-wasm32']='0.34.5';require('fs').writeFileSync(f,JSON.stringify(p,null,2)+'\n')"
-
-# Papra uses the TC39 Temporal global, which official node26 ships built-in but
-# FreeBSD's node26 package is compiled WITHOUT. Add a spec-compliant polyfill as a
-# prod dep; the s6 run script preloads it via `node --import temporal-polyfill/global`
-# so Temporal exists before any app code runs. (Pure JS — nothing to compile.)
-RUN node -e "const f='apps/papra-server/package.json';const p=require('./'+f);p.dependencies['temporal-polyfill']='0.3.2';require('fs').writeFileSync(f,JSON.stringify(p,null,2)+'\n')"
-
 # Install all needed workspaces. No native addon compiles here — node:sqlite is
-# built into node26, and sharp uses its WebAssembly runtime (added above).
-RUN pnpm install --frozen-lockfile=false \
+# built into node26, and sharp uses its WebAssembly runtime (added below).
+# --frozen-lockfile is load-bearing: unfrozen, pnpm re-resolves upstream's ^ranges
+# to newest-on-npm, which can pull releases built against peers papra doesn't ship
+# (2026-08-29: @tanstack/ai-anthropic 0.16.9 vs @tanstack/ai 0.39.1 boot crash).
+RUN pnpm install --frozen-lockfile \
     --filter "@papra/app-client..." \
     --filter "@papra/app-server..."
 
@@ -126,7 +121,29 @@ RUN pnpm --filter "@papra/app-client..." run build
 RUN pnpm --filter "@papra/app-server..." run build
 
 # Deploy server to a standalone directory (flat node_modules, no workspace symlinks).
+# Legacy deploy runs its own install and re-resolves ^ranges to newest-on-npm,
+# ignoring the lockfile (this, not the workspace install, is where
+# @tanstack/ai-anthropic 0.16.9 kept sneaking back in and crashing boot). Pin the
+# server's direct deps to the exact versions the frozen install put on disk so the
+# deploy resolution has nothing to drift on. workspace:/catalog: specs stay —
+# pnpm resolves those from the workspace itself.
+# (nodeLinker: hoisted — installed versions live in ROOT node_modules, so read
+# there first; fail loudly if a dep can't be resolved to a version.)
+RUN node -e "const fs=require('fs');const dir='apps/papra-server';const pkg=JSON.parse(fs.readFileSync(dir+'/package.json','utf8'));const miss=[];for(const [name,spec] of Object.entries(pkg.dependencies||{})){if(spec.startsWith('workspace:')||spec.startsWith('catalog:'))continue;let v;for(const base of ['node_modules/',dir+'/node_modules/']){try{v=JSON.parse(fs.readFileSync(base+name+'/package.json','utf8')).version;break}catch(e){}}if(v)pkg.dependencies[name]=v;else miss.push(name)}if(miss.length){console.error('PIN FAILED, deps not found on disk: '+miss.join(', '));process.exit(1)}fs.writeFileSync(dir+'/package.json',JSON.stringify(pkg,null,2)+'\n');console.log('pinned server deps to installed versions')"
 RUN pnpm --filter=@papra/app-server --prod --legacy deploy /app/production
+
+# FreeBSD runtime extras, merged into the deployed tree (workspace stays pristine
+# so the frozen lockfile holds — pnpm add there re-resolves upstream pins):
+# - @img/sharp-wasm32: sharp has no FreeBSD prebuilt; wasm fallback, pinned to
+#   sharp's exact version (guard below).
+# - temporal-polyfill: FreeBSD's node26 is built without the Temporal global;
+#   the s6 run script preloads it via `node --import`.
+# Installed in a scratch dir because npm can't parse the deployed package.json
+# (pnpm `catalog:` protocol); tar-merged so existing scoped dirs merge cleanly.
+RUN mkdir -p /tmp/extras && cd /tmp/extras && npm init -y >/dev/null && \
+    npm install --force @img/sharp-wasm32@0.34.5 temporal-polyfill@0.3.2 && \
+    tar cf - -C node_modules . | tar xf - -C /app/production/node_modules && \
+    rm -rf /tmp/extras
 
 # FreeBSD fix: @papra/lecture statically `import canvas from "@napi-rs/canvas"` at
 # module top-level. @napi-rs/canvas (Skia) has NO FreeBSD prebuilt and can't be

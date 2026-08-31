@@ -19,7 +19,7 @@ Minimalist self-hosted document management platform (Paperless alternative) on F
 ## Version Tags
 | Tag | Description | Best For |
 | :--- | :--- | :--- |
-| `latest` | **Upstream Binary**. Built from official release. | Most users. Matches Linux Docker behavior. |
+| `latest` | **Upstream Binary**. Built from official release. | Most users — recommended. |
 
 ## Prerequisites
 Before deploying, ensure your host environment is ready. See the [Quick Start Guide](https://daemonless.io/guides/quick-start) for host setup instructions.
@@ -51,8 +51,11 @@ services:
       - AUTH_IS_REGISTRATION_ENABLED=true  # Set to false after creating your account to lock down signups
     volumes:
       - "/path/to/containers/papra/app_data:/app_data"
-    restart: unless-stopped
+    # always (not unless-stopped) so FreeBSD's podman rc.d auto-starts it at boot
+    restart: always
 ```
+
+Save as `compose.yaml`, then run `podman-compose up -d`.
 
 ### AppJail Director
 **.env**:
@@ -127,6 +130,8 @@ OPTION overwrite=force
 OPTION from=ghcr.io/daemonless/papra:${tag}
 ```
 
+Save the files above, then run `appjail-director up`.
+
 ### Podman CLI
 
 ```bash
@@ -149,6 +154,8 @@ podman run -d --name papra \
   -v /path/to/containers/papra/app_data:/app_data \
   ghcr.io/daemonless/papra:latest
 ```
+
+Save as `run.sh`, then run `sh run.sh`.
 
 ### AppJail
 
@@ -175,6 +182,60 @@ appjail oci run -Pd \
   -e AUTH_IS_REGISTRATION_ENABLED=true \
   -o fstab="/path/to/containers/papra/app_data /app_data <pseudofs>" \
   ghcr.io/daemonless/papra:latest papra
+```
+
+Save as `run.sh`, then run `sh run.sh`.
+
+### Bastille
+
+> [!WARNING]
+> Bastille's OCI support is **experimental**. It requires `buildah`, shares the host network stack (`inherit`), and persists image-declared volumes under `--data-path`.
+
+```yaml
+services:
+  papra:
+    image: "ghcr.io/daemonless/papra:latest"
+    container_name: papra
+    network_mode: host  # jail shares host networking
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - NODE_ENV=production
+      - PORT=1222
+      - SERVER_HOSTNAME=127.0.0.1
+      - SERVER_SERVE_PUBLIC_DIR=false
+      - DATABASE_URL=file:/app_data/db/db.sqlite
+      - DOCUMENT_STORAGE_FILESYSTEM_ROOT=/app_data/documents
+      - PAPRA_CONFIG_DIR=/app_data
+      - INGESTION_FOLDER_ROOT=/ingestion
+      - EMAILS_DRY_RUN=true
+      - BETTER_AUTH_TELEMETRY=0
+      - AUTH_SECRET=${PAPRA_AUTH_SECRET}
+      - AUTH_IS_REGISTRATION_ENABLED=true
+```
+
+Save as `podman-compose.yml`, then run `bastille up`. Or via CLI:
+
+```bash
+bastille create -O \
+  --env PUID=1000 \
+  --env PGID=1000 \
+  --env TZ=Etc/UTC \
+  --env NODE_ENV=production \
+  --env PORT=1222 \
+  --env SERVER_HOSTNAME=127.0.0.1 \
+  --env SERVER_SERVE_PUBLIC_DIR=false \
+  --env DATABASE_URL=file:/app_data/db/db.sqlite \
+  --env DOCUMENT_STORAGE_FILESYSTEM_ROOT=/app_data/documents \
+  --env PAPRA_CONFIG_DIR=/app_data \
+  --env INGESTION_FOLDER_ROOT=/ingestion \
+  --env EMAILS_DRY_RUN=true \
+  --env BETTER_AUTH_TELEMETRY=0 \
+  --env AUTH_SECRET=${PAPRA_AUTH_SECRET} \
+  --env AUTH_IS_REGISTRATION_ENABLED=true \
+  --data-path /path/to/containers/papra \
+  papra ghcr.io/daemonless/papra:latest inherit
 ```
 
 ### Ansible
@@ -205,6 +266,8 @@ appjail oci run -Pd \
     volumes:
       - "/path/to/containers/papra/app_data:/app_data"
 ```
+
+Save as `papra-deploy.yaml`, then run `ansible-playbook papra-deploy.yaml`.
 
 ## Parameters
 
