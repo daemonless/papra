@@ -133,8 +133,10 @@ RUN pnpm --filter "@papra/app-server..." run build
 # server's direct deps to the exact versions the frozen install put on disk so the
 # deploy resolution has nothing to drift on. workspace:/catalog: specs stay —
 # pnpm resolves those from the workspace itself.
-# (nodeLinker: hoisted — installed versions live in ROOT node_modules, so read
-# there first; fail loudly if a dep can't be resolved to a version.)
+# (Two lookup bases, because the layout depends on pnpm's linker: hoisted puts
+# installed versions in ROOT node_modules, isolated symlinks the server's DIRECT deps
+# into apps/papra-server/node_modules. Both are tried, so this survived papra 26.6.2
+# dropping `nodeLinker: hoisted`. Fails loudly if a dep resolves to no version.)
 RUN node -e "const fs=require('fs');const dir='apps/papra-server';const pkg=JSON.parse(fs.readFileSync(dir+'/package.json','utf8'));const miss=[];for(const [name,spec] of Object.entries(pkg.dependencies||{})){if(spec.startsWith('workspace:')||spec.startsWith('catalog:'))continue;let v;for(const base of ['node_modules/',dir+'/node_modules/']){try{v=JSON.parse(fs.readFileSync(base+name+'/package.json','utf8')).version;break}catch(e){}}if(v)pkg.dependencies[name]=v;else miss.push(name)}if(miss.length){console.error('PIN FAILED, deps not found on disk: '+miss.join(', '));process.exit(1)}fs.writeFileSync(dir+'/package.json',JSON.stringify(pkg,null,2)+'\n');console.log('pinned server deps to installed versions')"
 RUN pnpm --filter=@papra/app-server --prod --legacy deploy /app/production
 
@@ -170,17 +172,32 @@ RUN node -e "const fs=require('fs'),path=require('path');const dir='/app/product
 # Fails the build loudly if upstream bumps sharp so the pin above can be updated.
 # Verify the sharp wasm fallback: (a) our pin matches the resolved sharp version
 # (sharp loads @img/sharp-wasm32 only if versions match exactly), and (b) sharp
-# actually loads — `require('sharp')` exercises the wasm runtime, pre-validating the
+# actually loads — requiring it exercises the wasm runtime, pre-validating the
 # runtime boot and failing the build loudly if the wasm path regresses.
-# (versions are read via fs.readFileSync, not require(): @img/sharp-wasm32's exports
-# map doesn't expose ./package.json to require)
-RUN cd /app/production && \
-    PKGVER='const fs=require("fs");console.log(JSON.parse(fs.readFileSync(process.argv[1],"utf8")).version)' && \
-    SHARP_VER=$(node -e "$PKGVER" node_modules/sharp/package.json) && \
-    WASM_VER=$(node -e "$PKGVER" node_modules/@img/sharp-wasm32/package.json) && \
-    echo "sharp=${SHARP_VER} sharp-wasm32=${WASM_VER}" && \
-    { [ "$SHARP_VER" = "$WASM_VER" ] || { echo "VERSION DRIFT: update the @img/sharp-wasm32 pin in Containerfile.j2 to ${SHARP_VER}"; exit 1; }; } && \
-    node -e "require('sharp'); console.log('sharp loads OK on FreeBSD via @img/sharp-wasm32')"
+#
+# Resolve sharp through @papra/lecture rather than by a hard-coded path. sharp is a
+# TRANSITIVE dep (lecture -> sharp), so its location depends on pnpm's linker:
+#   - hoisted  -> /app/production/node_modules/sharp
+#   - isolated -> /app/production/node_modules/.pnpm/sharp@<ver>/node_modules/sharp
+# papra 26.6.2 dropped `nodeLinker: hoisted` from pnpm-workspace.yaml (adding
+# injectWorkspacePackages instead), which moved sharp into the virtual store and made
+# the old literal `node_modules/sharp/package.json` read fail with ENOENT. createRequire
+# from lecture's manifest resolves it under either layout, and is what the app itself
+# does at runtime — so this also tests the real resolution path, not an approximation.
+#
+# @img/sharp-wasm32 is still read by literal path: we place it there ourselves with the
+# tar-merge above, so it is not subject to the linker layout. (Read via fs.readFileSync,
+# not require(): its exports map doesn't expose ./package.json.) sharp finds it by
+# walking up from the virtual store to /app/production/node_modules.
+RUN node -e "const fs=require('fs'),{createRequire}=require('module'); \
+    const req=createRequire('/app/production/node_modules/@papra/lecture/package.json'); \
+    const sharpPkg=req.resolve('sharp/package.json'); \
+    const S=JSON.parse(fs.readFileSync(sharpPkg,'utf8')).version; \
+    const W=JSON.parse(fs.readFileSync('/app/production/node_modules/@img/sharp-wasm32/package.json','utf8')).version; \
+    console.log('sharp='+S+' sharp-wasm32='+W+' (resolved '+sharpPkg+')'); \
+    if(S!==W){console.error('VERSION DRIFT: update the @img/sharp-wasm32 pin in Containerfile.j2 to '+S);process.exit(1);} \
+    req('sharp'); \
+    console.log('sharp loads OK on FreeBSD via @img/sharp-wasm32');"
 
 # Carry the workspace manifest the server expects at runtime (upstream copies it too).
 RUN cp pnpm-workspace.yaml /app/production/pnpm-workspace.yaml || true
