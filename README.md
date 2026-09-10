@@ -93,7 +93,7 @@ services:
   papra:
     name: papra
     options:
-      - container: 'boot args:--pull'
+      - container: 'args:--pull'
     oci:
       user: root
       environment:
@@ -126,11 +126,14 @@ volumes:
 
 ARG tag=latest
 
+OPTION container=boot
 OPTION overwrite=force
 OPTION from=ghcr.io/daemonless/papra:${tag}
 ```
 
 Save the files above, then run `appjail-director up`.
+
+
 
 ### Podman CLI
 
@@ -159,6 +162,7 @@ Save as `run.sh`, then run `sh run.sh`.
 
 ### AppJail
 
+
 ```bash
 appjail oci run -Pd \
   -o overwrite=force \
@@ -184,19 +188,22 @@ appjail oci run -Pd \
   ghcr.io/daemonless/papra:latest papra
 ```
 
-Save as `run.sh`, then run `sh run.sh`.
+Save the files above, then run `sh run.sh`.
+
+
 
 ### Bastille
 
 > [!WARNING]
-> Bastille's OCI support is **experimental**. It requires `buildah`, shares the host network stack (`inherit`), and persists image-declared volumes under `--data-path`.
+> Bastille's OCI support is **experimental**. It requires `buildah` and shares the host network stack (`inherit`). Mount volumes with `--volume HOST JAIL`; without it, image-declared volumes are stored under `${bastille_volumesdir}/${jail}`.
 
 ```yaml
 services:
   papra:
+    name: papra
     image: "ghcr.io/daemonless/papra:latest"
-    container_name: papra
-    network_mode: host  # jail shares host networking
+    network:
+      - mode: host
     environment:
       - PUID=1000
       - PGID=1000
@@ -213,9 +220,11 @@ services:
       - BETTER_AUTH_TELEMETRY=0
       - AUTH_SECRET=${PAPRA_AUTH_SECRET}
       - AUTH_IS_REGISTRATION_ENABLED=true
+    volumes:
+      - "/path/to/containers/papra/app_data:/app_data"
 ```
 
-Save as `podman-compose.yml`, then run `bastille up`. Or via CLI:
+Save as `bastille-compose.yml`, then run `bastille up`. Or via CLI:
 
 ```bash
 bastille create -O \
@@ -234,7 +243,7 @@ bastille create -O \
   --env BETTER_AUTH_TELEMETRY=0 \
   --env AUTH_SECRET=${PAPRA_AUTH_SECRET} \
   --env AUTH_IS_REGISTRATION_ENABLED=true \
-  --data-path /path/to/containers/papra \
+  --volume /path/to/containers/papra/app_data /app_data \
   papra ghcr.io/daemonless/papra:latest inherit
 ```
 

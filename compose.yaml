@@ -17,7 +17,9 @@ x-daemonless:
       PUID: "User ID for the application process"
       PGID: "Group ID for the application process"
       TZ: "Timezone for the container"
-      AUTH_SECRET: "better-auth session signing secret, >=32 chars. Optional: if unset, the container generates a strong secret on first boot and persists it under /app_data. Set one you control with `openssl rand -hex 48` to manage it yourself."
+      AUTH_SECRET:
+        desc: "better-auth session signing secret, >=32 chars. Optional: if unset, the container generates a strong secret on first boot and persists it under /app_data. Set one you control with `openssl rand -hex 48` to manage it yourself."
+        optional: true
       DATABASE_URL: "SQLite database URL (file:/app_data/db/db.sqlite)"
       AUTH_IS_REGISTRATION_ENABLED: "Set to false after creating your account to lock down signups"
       NODE_ENV: "Node runtime mode; leave as 'production'"
