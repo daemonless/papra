@@ -133,8 +133,10 @@ RUN pnpm --filter "@papra/app-server..." run build
 # server's direct deps to the exact versions the frozen install put on disk so the
 # deploy resolution has nothing to drift on. workspace:/catalog: specs stay —
 # pnpm resolves those from the workspace itself.
-# (nodeLinker: hoisted — installed versions live in ROOT node_modules, so read
-# there first; fail loudly if a dep can't be resolved to a version.)
+# (Two lookup bases, because the layout depends on pnpm's linker: hoisted puts
+# installed versions in ROOT node_modules, isolated symlinks the server's DIRECT deps
+# into apps/papra-server/node_modules. Both are tried, so this survived papra 26.6.2
+# dropping `nodeLinker: hoisted`. Fails loudly if a dep resolves to no version.)
 RUN node -e "const fs=require('fs');const dir='apps/papra-server';const pkg=JSON.parse(fs.readFileSync(dir+'/package.json','utf8'));const miss=[];for(const [name,spec] of Object.entries(pkg.dependencies||{})){if(spec.startsWith('workspace:')||spec.startsWith('catalog:'))continue;let v;for(const base of ['node_modules/',dir+'/node_modules/']){try{v=JSON.parse(fs.readFileSync(base+name+'/package.json','utf8')).version;break}catch(e){}}if(v)pkg.dependencies[name]=v;else miss.push(name)}if(miss.length){console.error('PIN FAILED, deps not found on disk: '+miss.join(', '));process.exit(1)}fs.writeFileSync(dir+'/package.json',JSON.stringify(pkg,null,2)+'\n');console.log('pinned server deps to installed versions')"
 RUN pnpm --filter=@papra/app-server --prod --legacy deploy /app/production
 
@@ -165,22 +167,29 @@ RUN mkdir -p /tmp/extras && cd /tmp/extras && npm init -y >/dev/null && \
 # still fails loudly if upstream changes the canvas pattern itself (patch drift).
 RUN node -e "const fs=require('fs'),path=require('path');const dir='/app/production/node_modules/@papra/lecture';const pkg=JSON.parse(fs.readFileSync(path.join(dir,'package.json'),'utf8'));let e=pkg.exports&&pkg.exports['.'];if(e&&typeof e==='object')e=e.import||e.default||e.node||e.require;const rel=e||pkg.module||pkg.main||'dist/index.mjs';const f=path.join(dir,rel);let s=fs.readFileSync(f,'utf8');const imp='import canvas from \"@napi-rs/canvas\";';const use='canvasImport: async () => canvas,';if(!s.includes(imp)||!s.includes(use)){console.error('PATCH DRIFT: @papra/lecture canvas pattern not found in '+rel+'; review the lazy-canvas patch');process.exit(1);}s=s.replace(imp,'').replace(use,'canvasImport: async () => (await import(\"@napi-rs/canvas\")).default,');if(s.includes(imp)){console.error('PATCH FAILED: static canvas import still present');process.exit(1);}fs.writeFileSync(f,s);console.log('Patched @papra/lecture ('+rel+'): @napi-rs/canvas import is now lazy.');"
 
-# Verify the sharp wasm fallback deployed and that our pin still matches the resolved
-# sharp version (sharp loads @img/sharp-wasm32 only if their versions match exactly).
-# Fails the build loudly if upstream bumps sharp so the pin above can be updated.
-# Verify the sharp wasm fallback: (a) our pin matches the resolved sharp version
-# (sharp loads @img/sharp-wasm32 only if versions match exactly), and (b) sharp
-# actually loads — `require('sharp')` exercises the wasm runtime, pre-validating the
-# runtime boot and failing the build loudly if the wasm path regresses.
-# (versions are read via fs.readFileSync, not require(): @img/sharp-wasm32's exports
-# map doesn't expose ./package.json to require)
+# sharp 0.34.x ships no `exports` map and, since papra 26.6.2 dropped `nodeLinker: hoisted`
+# (adding injectWorkspacePackages), is left ONLY in pnpm's virtual store
+# (node_modules/.pnpm/sharp@<ver>/node_modules/sharp) -- unreachable by @papra/lecture or the
+# server at require() time, so the app can't load it at all. Hoist it back to the top-level
+# node_modules (a symlink into the virtual store) so resolution works under either linker,
+# matching pre-26.6.2 behaviour. @img/sharp-wasm32 is already placed at top level above.
+# Then verify: (a) our wasm pin matches the resolved sharp version (sharp loads
+# @img/sharp-wasm32 only if versions match exactly), and (b) sharp actually loads via the
+# SAME path the app uses (createRequire from @papra/lecture), exercising the wasm runtime and
+# failing the build loudly if it regresses. (versions read via fs.readFileSync, not require():
+# neither package exposes ./package.json.)
 RUN cd /app/production && \
+    if [ ! -e node_modules/sharp ]; then \
+      SRC=$(ls -d node_modules/.pnpm/sharp@*/node_modules/sharp 2>/dev/null | head -1); \
+      [ -n "$SRC" ] || { echo "sharp not found in virtual store"; exit 1; }; \
+      ln -sfn "${SRC#node_modules/}" node_modules/sharp && echo "hoisted sharp -> ${SRC#node_modules/}"; \
+    fi && \
     PKGVER='const fs=require("fs");console.log(JSON.parse(fs.readFileSync(process.argv[1],"utf8")).version)' && \
     SHARP_VER=$(node -e "$PKGVER" node_modules/sharp/package.json) && \
     WASM_VER=$(node -e "$PKGVER" node_modules/@img/sharp-wasm32/package.json) && \
     echo "sharp=${SHARP_VER} sharp-wasm32=${WASM_VER}" && \
     { [ "$SHARP_VER" = "$WASM_VER" ] || { echo "VERSION DRIFT: update the @img/sharp-wasm32 pin in Containerfile.j2 to ${SHARP_VER}"; exit 1; }; } && \
-    node -e "require('sharp'); console.log('sharp loads OK on FreeBSD via @img/sharp-wasm32')"
+    node -e "const {createRequire}=require('module');createRequire('/app/production/node_modules/@papra/lecture/package.json')('sharp');console.log('sharp loads OK on FreeBSD via @img/sharp-wasm32 (hoisted from virtual store)')"
 
 # Carry the workspace manifest the server expects at runtime (upstream copies it too).
 RUN cp pnpm-workspace.yaml /app/production/pnpm-workspace.yaml || true

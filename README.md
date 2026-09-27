@@ -7,6 +7,7 @@ Source: dbuild templates
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/daemonless/papra/build.yaml?style=flat-square&label=Build&color=green)](https://github.com/daemonless/papra/actions)
 [![Last Commit](https://img.shields.io/github/last-commit/daemonless/papra?style=flat-square&label=Last+Commit&color=blue)](https://github.com/daemonless/papra/commits)
+[![OCI Pulls](https://img.shields.io/docker/pulls/daemonless/papra?style=flat-square&label=OCI+Pulls&color=blue)](https://hub.docker.com/r/daemonless/papra)
 
 Minimalist self-hosted document management platform (Paperless alternative) on FreeBSD.
 
