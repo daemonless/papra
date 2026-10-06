@@ -19,10 +19,7 @@ ARG UPSTREAM_URL
 #    is NO native addon to compile — hence NO C toolchain / node-gyp / python here.
 #  - git-lite jq: clone the release tag resolved from the GitHub API.
 #
-# node26 ships only in the FreeBSD `latest` pkg branch (the stock base points at
-# `quarterly`, which tops out at node25), so switch the branch before installing.
-RUN sed -i '' -e 's,/quarterly,/latest,' /etc/pkg/FreeBSD.conf && \
-    pkg update && pkg install -y \
+RUN pkg update && pkg install -y \
     node26 npm-node26 corepack \
     git-lite jq \
     && pkg clean -ay
@@ -143,7 +140,7 @@ RUN pnpm --filter=@papra/app-server --prod --legacy deploy /app/production
 # Installed in a scratch dir because npm can't parse the deployed package.json
 # (pnpm `catalog:` protocol); tar-merged so existing scoped dirs merge cleanly.
 RUN mkdir -p /tmp/extras && cd /tmp/extras && npm init -y >/dev/null && \
-    npm install --force @img/sharp-wasm32@0.34.5 temporal-polyfill@0.3.2 && \
+    npm install --force @img/sharp-wasm32@0.35.4 temporal-polyfill@0.3.2 && \
     tar cf - -C node_modules . | tar xf - -C /app/production/node_modules && \
     rm -rf /tmp/extras
 
@@ -223,10 +220,8 @@ LABEL org.opencontainers.image.title="Papra" \
       io.daemonless.healthcheck-url="${HEALTHCHECK_ENDPOINT}" \
       io.daemonless.packages="${PACKAGES}"
 
-# Install runtime dependencies. node26 lives in the `latest` pkg branch (see
-# builder stage) — switch before install.
-RUN sed -i '' -e 's,/quarterly,/latest,' /etc/pkg/FreeBSD.conf && \
-    pkg update && \
+# Install runtime dependencies (node26 from quarterly, see the builder stage).
+RUN pkg update && \
     pkg install -y ${PACKAGES} && \
     mkdir -p /app /app/public /app_data/db /app_data/documents /ingestion \
              /var/log/nginx /var/run /var/tmp/nginx && \
