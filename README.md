@@ -51,7 +51,7 @@ services:
       - AUTH_SECRET=${PAPRA_AUTH_SECRET}  # better-auth session signing secret, >=32 chars. Optional: if unset, the container generates a strong secret on first boot and persists it under /app_data. Set one you control with `openssl rand -hex 48` to manage it yourself.
       - AUTH_IS_REGISTRATION_ENABLED=true  # Set to false after creating your account to lock down signups
     volumes:
-      - "/path/to/containers/papra/app_data:/app_data"
+      - "/containers/papra/app_data:/app_data"
     # always (not unless-stopped) so FreeBSD's podman rc.d auto-starts it at boot
     restart: always
 ```
@@ -117,7 +117,7 @@ services:
       - papra_app_data: /app_data
 volumes:
   papra_app_data:
-    device: '/path/to/containers/papra/app_data'
+    device: '/containers/papra/app_data'
 ```
 
 **Makejail**:
@@ -133,63 +133,6 @@ OPTION from=ghcr.io/daemonless/papra:${tag}
 ```
 
 Save the files above, then run `appjail-director up`.
-
-
-
-### Podman CLI
-
-```bash
-podman run -d --name papra \
-  -e PUID=1000 \
-  -e PGID=1000 \
-  -e TZ=Etc/UTC \
-  -e NODE_ENV=production \
-  -e PORT=1222 \
-  -e SERVER_HOSTNAME=127.0.0.1 \
-  -e SERVER_SERVE_PUBLIC_DIR=false \
-  -e DATABASE_URL=file:/app_data/db/db.sqlite \
-  -e DOCUMENT_STORAGE_FILESYSTEM_ROOT=/app_data/documents \
-  -e PAPRA_CONFIG_DIR=/app_data \
-  -e INGESTION_FOLDER_ROOT=/ingestion \
-  -e EMAILS_DRY_RUN=true \
-  -e BETTER_AUTH_TELEMETRY=0 \
-  -e AUTH_SECRET=${PAPRA_AUTH_SECRET} \
-  -e AUTH_IS_REGISTRATION_ENABLED=true \
-  -v /path/to/containers/papra/app_data:/app_data \
-  ghcr.io/daemonless/papra:latest
-```
-
-Save as `run.sh`, then run `sh run.sh`.
-
-### AppJail
-
-
-```bash
-appjail oci run -Pd \
-  -o overwrite=force \
-  -o container="args:--pull" \
-  -o virtualnet=":<random> default" \
-  -o nat \
-  -e PUID=1000 \
-  -e PGID=1000 \
-  -e TZ=Etc/UTC \
-  -e NODE_ENV=production \
-  -e PORT=1222 \
-  -e SERVER_HOSTNAME=127.0.0.1 \
-  -e SERVER_SERVE_PUBLIC_DIR=false \
-  -e DATABASE_URL=file:/app_data/db/db.sqlite \
-  -e DOCUMENT_STORAGE_FILESYSTEM_ROOT=/app_data/documents \
-  -e PAPRA_CONFIG_DIR=/app_data \
-  -e INGESTION_FOLDER_ROOT=/ingestion \
-  -e EMAILS_DRY_RUN=true \
-  -e BETTER_AUTH_TELEMETRY=0 \
-  -e AUTH_SECRET=${PAPRA_AUTH_SECRET} \
-  -e AUTH_IS_REGISTRATION_ENABLED=true \
-  -o fstab="/path/to/containers/papra/app_data /app_data <pseudofs>" \
-  ghcr.io/daemonless/papra:latest papra
-```
-
-Save the files above, then run `sh run.sh`.
 
 
 
@@ -222,62 +165,10 @@ services:
       - AUTH_SECRET=${PAPRA_AUTH_SECRET}
       - AUTH_IS_REGISTRATION_ENABLED=true
     volumes:
-      - "/path/to/containers/papra/app_data:/app_data"
+      - "/containers/papra/app_data:/app_data"
 ```
 
-Save as `bastille-compose.yml`, then run `bastille up`. Or via CLI:
-
-```bash
-bastille create -O \
-  --env PUID=1000 \
-  --env PGID=1000 \
-  --env TZ=Etc/UTC \
-  --env NODE_ENV=production \
-  --env PORT=1222 \
-  --env SERVER_HOSTNAME=127.0.0.1 \
-  --env SERVER_SERVE_PUBLIC_DIR=false \
-  --env DATABASE_URL=file:/app_data/db/db.sqlite \
-  --env DOCUMENT_STORAGE_FILESYSTEM_ROOT=/app_data/documents \
-  --env PAPRA_CONFIG_DIR=/app_data \
-  --env INGESTION_FOLDER_ROOT=/ingestion \
-  --env EMAILS_DRY_RUN=true \
-  --env BETTER_AUTH_TELEMETRY=0 \
-  --env AUTH_SECRET=${PAPRA_AUTH_SECRET} \
-  --env AUTH_IS_REGISTRATION_ENABLED=true \
-  --volume /path/to/containers/papra/app_data /app_data \
-  papra ghcr.io/daemonless/papra:latest inherit
-```
-
-### Ansible
-
-```yaml
-- name: Deploy papra
-  containers.podman.podman_container:
-    name: papra
-    image: "ghcr.io/daemonless/papra:latest"
-    state: started
-    restart_policy: always
-    env:
-      PUID: "1000"
-      PGID: "1000"
-      TZ: "Etc/UTC"
-      NODE_ENV: "production"
-      PORT: "1222"
-      SERVER_HOSTNAME: "127.0.0.1"
-      SERVER_SERVE_PUBLIC_DIR: "false"
-      DATABASE_URL: "file:/app_data/db/db.sqlite"
-      DOCUMENT_STORAGE_FILESYSTEM_ROOT: "/app_data/documents"
-      PAPRA_CONFIG_DIR: "/app_data"
-      INGESTION_FOLDER_ROOT: "/ingestion"
-      EMAILS_DRY_RUN: "true"
-      BETTER_AUTH_TELEMETRY: "0"
-      AUTH_SECRET: "${PAPRA_AUTH_SECRET}"
-      AUTH_IS_REGISTRATION_ENABLED: "true"
-    volumes:
-      - "/path/to/containers/papra/app_data:/app_data"
-```
-
-Save as `papra-deploy.yaml`, then run `ansible-playbook papra-deploy.yaml`.
+Save as `bastille-compose.yml`, then run `bastille up`.
 
 ## Parameters
 
