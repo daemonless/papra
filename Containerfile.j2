@@ -3,7 +3,9 @@
 # Minimalist self-hosted document management platform (Paperless alternative)
 # --------------------------------------------------------------------------
 
-ARG BASE_VERSION=15
+# latest pkgs: quarterly's node26-26.10.0_1 SIGBUSes in the CJS lexer (bug 299170,
+# kills `vite build`); fixed in 26.10.0_3.
+ARG BASE_VERSION=15-latest
 ARG UPSTREAM_URL="https://api.github.com/repos/papra-hq/papra/releases"
 
 # ==========================================================================
@@ -220,7 +222,7 @@ LABEL org.opencontainers.image.title="Papra" \
       io.daemonless.healthcheck-url="${HEALTHCHECK_ENDPOINT}" \
       io.daemonless.packages="${PACKAGES}"
 
-# Install runtime dependencies (node26 from quarterly, see the builder stage).
+# Install runtime dependencies (node26 from latest, see BASE_VERSION).
 RUN pkg update && \
     pkg install -y ${PACKAGES} && \
     mkdir -p /app /app/public /app_data/db /app_data/documents /ingestion \
