@@ -1,5 +1,5 @@
 #!/bin/sh
-# Papra nginx s6 service.
+# Papra nginx rcd unit.
 # Serves the built SolidStart/Vite SPA on port 1221 and reverse-proxies /api/
 # to the node backend on 127.0.0.1:1222.
 

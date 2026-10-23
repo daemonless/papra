@@ -1,12 +1,7 @@
 #!/bin/sh
-# Papra Node.js backend s6 service.
+# Papra Node.js backend rcd unit.
 # Runs DB migrations (via tsx) then starts the bundled server (node dist/index.js).
 # Listens on 127.0.0.1:$PORT (default 1222); nginx fronts it on 1221.
-
-# NOTE: do NOT `cd` at this level. s6-notifyoncheck (below) requires its cwd to be
-# the service directory so it can reach ./supervise and ./notification-fd — cd'ing
-# first makes it fail with "s6-supervise not running". The node commands cd into
-# /app inside their own subshell instead.
 
 # Papra uses the TC39 Temporal global (rate-limit config). Official node26 ships
 # Temporal built-in, but FreeBSD's node26 package is compiled WITHOUT it and even
@@ -39,9 +34,8 @@ fi
 
 echo "[INFO] Running database migrations..."
 # tsx's bin wrapper is a bash script that breaks under FreeBSD /bin/sh, so load
-# tsx as a Node loader directly (same trick as sparky-fitness). cd /app inside the
-# subshell so this run script keeps its cwd at the service directory (see note above).
-s6-setuidgid bsd sh -c "cd /app && exec $NODE $NODE_FLAGS --import tsx src/scripts/migrate-up.script.ts"
+# tsx as a Node loader directly (same trick as sparky-fitness).
+dsu bsd sh -c "cd /app && exec $NODE $NODE_FLAGS --import tsx src/scripts/migrate-up.script.ts"
 MIG_RC=$?
 if [ "$MIG_RC" -ne 0 ]; then
     echo "[ERROR] Migrations failed (exit $MIG_RC)." >&2
@@ -50,11 +44,4 @@ fi
 echo "[INFO] Migrations complete."
 
 echo "[INFO] Starting Papra server on 127.0.0.1:${PORT:-1222}..."
-# s6-notifyoncheck polls data/check until /api/ping answers, then signals readiness
-# on fd 3 (declared in ./notification-fd) so s6 reports the service "up" only once
-# the backend is genuinely serving — makes CIT screenshot capture deterministic.
-# Run cwd stays at the service dir (required); node cd's to /app in its own subshell.
-# Check is passed by absolute path (baked into the image). node does not double-fork, so no -d.
-exec s6-notifyoncheck -3 3 -n 120 -w 1000 \
-    -c /etc/services.d/papra-server/data/check \
-    s6-setuidgid bsd sh -c "cd /app && exec $NODE $NODE_FLAGS dist/index.js"
+exec dsu bsd sh -c "cd /app && exec $NODE $NODE_FLAGS dist/index.js"

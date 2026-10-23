@@ -1,5 +1,0 @@
-#!/bin/sh
-# s6-notifyoncheck readiness probe for the Papra node backend.
-# nginx proxies /api/ (prefix preserved) to 127.0.0.1:1222, so the backend serves
-# /api/ping directly. HTTP 200 here = node is live and the SQLite DB is open.
-exec fetch -qo /dev/null "http://127.0.0.1:1222/api/ping"

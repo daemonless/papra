@@ -17,7 +17,7 @@ ARG UPSTREAM_URL="https://api.github.com/repos/papra-hq/papra/releases"
 # ==========================================================================
 # Stage 1: Builder
 # ==========================================================================
-FROM ghcr.io/daemonless/base:${BASE_VERSION} AS builder
+FROM ghcr.io/daemonless/base-exec:${BASE_VERSION} AS builder
 
 ARG UPSTREAM_URL
 
@@ -201,7 +201,7 @@ RUN if [ ! -f /app/production/node_modules/.bin/tsx ]; then \
 # ==========================================================================
 # Stage 2: Runtime
 # ==========================================================================
-FROM ghcr.io/daemonless/base:${BASE_VERSION}
+FROM ghcr.io/daemonless/base-rcd:${BASE_VERSION}
 
 ARG FREEBSD_ARCH=amd64
 ARG PACKAGES="node26 nginx tesseract tesseract-data"
@@ -249,10 +249,8 @@ RUN chown -R bsd:bsd /app /app_data /ingestion && \
 
 # Copy service files (s6 runners, nginx config, healthz).
 COPY root/ /
-RUN chmod +x /etc/services.d/*/run \
-              /etc/services.d/papra-server/data/check \
-              /etc/cont-init.d/* \
-              /healthz 2>/dev/null || true
+RUN chmod +x /daemonless/libexec/* /daemonless/init.d/*
+RUN chmod +x /healthz
 
 WORKDIR /app
 
