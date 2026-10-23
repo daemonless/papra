@@ -1,11 +1,11 @@
 {
-  "generated": "2026-10-22T22:21:34Z",
+  "generated": "2026-10-23T16:58:12Z",
   "image": "papra",
   "tags": {
     "latest": {
       "app_version": "26.7.1",
       "arch": "amd64",
-      "generated": "2026-10-22T22:19:52Z",
+      "generated": "2026-10-23T16:49:39Z",
       "packages": {
         "dotnet": [],
         "freebsd": [
@@ -174,13 +174,6 @@
             "licenses": [
               "BSD2CLAUSE"
             ],
-            "name": "FreeBSD-rc",
-            "version": "15.1"
-          },
-          {
-            "licenses": [
-              "BSD2CLAUSE"
-            ],
             "name": "FreeBSD-resolvconf",
             "version": "15.1"
           },
@@ -289,13 +282,6 @@
             ],
             "name": "curl",
             "version": "8.22.0"
-          },
-          {
-            "licenses": [
-              "ISCL"
-            ],
-            "name": "execline",
-            "version": "2.9.8.1"
           },
           {
             "licenses": [
@@ -739,25 +725,11 @@
           },
           {
             "licenses": [
-              "ISCL"
-            ],
-            "name": "s6",
-            "version": "2.14.0.1"
-          },
-          {
-            "licenses": [
               "MIT",
               "APACHE20"
             ],
             "name": "simdjson",
             "version": "5.0.5"
-          },
-          {
-            "licenses": [
-              "ISCL"
-            ],
-            "name": "skalibs",
-            "version": "2.14.5.1"
           },
           {
             "licenses": [
@@ -5113,7 +5085,7 @@
       "source": "upstream",
       "summary": {
         "dotnet": 0,
-        "freebsd": 114,
+        "freebsd": 110,
         "go": 11,
         "java": 0,
         "node": 842,
@@ -5121,7 +5093,7 @@
         "python": 2,
         "ruby": 0,
         "rust": 0,
-        "total": 969
+        "total": 965
       }
     }
   }
