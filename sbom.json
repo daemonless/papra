@@ -1,11 +1,11 @@
 {
-  "generated": "2026-10-23T16:58:12Z",
+  "generated": "2026-10-24T08:51:02Z",
   "image": "papra",
   "tags": {
     "latest": {
       "app_version": "26.7.1",
       "arch": "amd64",
-      "generated": "2026-10-23T16:49:39Z",
+      "generated": "2026-10-24T08:49:01Z",
       "packages": {
         "dotnet": [],
         "freebsd": [
@@ -252,7 +252,7 @@
               "MIT"
             ],
             "name": "c-ares",
-            "version": "1.34.8"
+            "version": "1.34.9"
           },
           {
             "licenses": [
@@ -281,7 +281,7 @@
               "MIT"
             ],
             "name": "curl",
-            "version": "8.22.0"
+            "version": "8.23.0"
           },
           {
             "licenses": [
@@ -650,7 +650,7 @@
               "BSD2CLAUSE"
             ],
             "name": "nginx",
-            "version": "1.30.6_3,3"
+            "version": "1.30.6_4,3"
           },
           {
             "licenses": [
