@@ -1,11 +1,11 @@
 {
-  "generated": "2026-10-24T08:51:02Z",
+  "generated": "2026-11-04T13:47:23Z",
   "image": "papra",
   "tags": {
     "latest": {
       "app_version": "26.7.1",
       "arch": "amd64",
-      "generated": "2026-10-24T08:49:01Z",
+      "generated": "2026-11-04T13:45:36Z",
       "packages": {
         "dotnet": [],
         "freebsd": [
@@ -182,7 +182,7 @@
               "BSD2CLAUSE"
             ],
             "name": "FreeBSD-runtime",
-            "version": "15.1p5"
+            "version": "15.1p6"
           },
           {
             "licenses": [
@@ -245,7 +245,7 @@
               "MIT"
             ],
             "name": "brotli",
-            "version": "1.2.0,1"
+            "version": "1.2.1,1"
           },
           {
             "licenses": [
@@ -259,7 +259,7 @@
               "MPL20"
             ],
             "name": "ca_root_nss",
-            "version": "3.131"
+            "version": "3.132"
           },
           {
             "licenses": [
@@ -267,7 +267,7 @@
               "MPL11"
             ],
             "name": "cairo",
-            "version": "1.18.2,3"
+            "version": "1.18.6,3"
           },
           {
             "licenses": [
@@ -310,7 +310,7 @@
               "LGPL21"
             ],
             "name": "fribidi",
-            "version": "1.0.17"
+            "version": "1.0.18"
           },
           {
             "licenses": [
@@ -355,7 +355,7 @@
               "MIT"
             ],
             "name": "harfbuzz",
-            "version": "14.6.0"
+            "version": "15.0.0"
           },
           {
             "licenses": [
@@ -478,7 +478,7 @@
               "BSD2CLAUSE"
             ],
             "name": "libarchive",
-            "version": "3.8.8,1"
+            "version": "3.8.11,1"
           },
           {
             "licenses": [
@@ -593,7 +593,7 @@
               "MIT"
             ],
             "name": "libuv",
-            "version": "1.52.1"
+            "version": "1.52.1_1"
           },
           {
             "licenses": [
@@ -601,6 +601,13 @@
             ],
             "name": "libxcb",
             "version": "1.17.0"
+          },
+          {
+            "licenses": [
+              "MIT"
+            ],
+            "name": "libxml2",
+            "version": "2.15.4"
           },
           {
             "licenses": [
@@ -650,14 +657,14 @@
               "BSD2CLAUSE"
             ],
             "name": "nginx",
-            "version": "1.30.6_4,3"
+            "version": "1.30.6_10,3"
           },
           {
             "licenses": [
               "MIT"
             ],
             "name": "node26",
-            "version": "26.10.0_3"
+            "version": "26.12.1_1"
           },
           {
             "licenses": [
@@ -671,7 +678,7 @@
               "LGPL21+"
             ],
             "name": "pango",
-            "version": "1.57.1"
+            "version": "1.58.2"
           },
           {
             "licenses": [
@@ -729,7 +736,7 @@
               "APACHE20"
             ],
             "name": "simdjson",
-            "version": "5.0.5"
+            "version": "5.1.0"
           },
           {
             "licenses": [
@@ -743,14 +750,14 @@
               "PD"
             ],
             "name": "sqlite3",
-            "version": "3.53.4,1"
+            "version": "3.54.1,1"
           },
           {
             "licenses": [
               "APACHE20"
             ],
             "name": "tesseract",
-            "version": "5.5.3"
+            "version": "5.5.4"
           },
           {
             "licenses": [
@@ -5085,7 +5092,7 @@
       "source": "upstream",
       "summary": {
         "dotnet": 0,
-        "freebsd": 110,
+        "freebsd": 111,
         "go": 11,
         "java": 0,
         "node": 842,
@@ -5093,7 +5100,7 @@
         "python": 2,
         "ruby": 0,
         "rust": 0,
-        "total": 965
+        "total": 966
       }
     }
   }
