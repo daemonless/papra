@@ -1,11 +1,11 @@
 {
-  "generated": "2026-11-04T13:47:23Z",
+  "generated": "2026-11-19T08:51:44Z",
   "image": "papra",
   "tags": {
     "latest": {
       "app_version": "26.7.1",
       "arch": "amd64",
-      "generated": "2026-11-04T13:45:36Z",
+      "generated": "2026-11-19T08:49:41Z",
       "packages": {
         "dotnet": [],
         "freebsd": [
@@ -288,7 +288,7 @@
               "MIT"
             ],
             "name": "expat",
-            "version": "2.9.0"
+            "version": "2.10.0"
           },
           {
             "licenses": [
@@ -363,7 +363,7 @@
               "CC0-1.0"
             ],
             "name": "hdr_histogram",
-            "version": "0.11.10"
+            "version": "0.12.1"
           },
           {
             "licenses": [
@@ -400,7 +400,7 @@
               "ZLIB"
             ],
             "name": "jpeg-turbo",
-            "version": "3.1.4.1"
+            "version": "3.2.1"
           },
           {
             "licenses": [
@@ -421,7 +421,7 @@
               "APACHE20"
             ],
             "name": "lerc",
-            "version": "4.2.0"
+            "version": "4.3.0"
           },
           {
             "licenses": [
@@ -535,28 +535,28 @@
               "GPLv2"
             ],
             "name": "liblz4",
-            "version": "1.10.0_2,1"
+            "version": "1.11.1,1"
           },
           {
             "licenses": [
               "MIT"
             ],
             "name": "libnghttp2",
-            "version": "1.70.0"
+            "version": "1.71.0"
           },
           {
             "licenses": [
               "MIT"
             ],
             "name": "libnghttp3",
-            "version": "1.18.0"
+            "version": "1.19.0"
           },
           {
             "licenses": [
               "MIT"
             ],
             "name": "libngtcp2",
-            "version": "1.25.0"
+            "version": "1.26.0"
           },
           {
             "licenses": [
@@ -621,7 +621,7 @@
               "MIT"
             ],
             "name": "llhttp",
-            "version": "9.4.3"
+            "version": "9.4.4"
           },
           {
             "licenses": [
@@ -657,14 +657,14 @@
               "BSD2CLAUSE"
             ],
             "name": "nginx",
-            "version": "1.30.6_10,3"
+            "version": "1.30.6_18,3"
           },
           {
             "licenses": [
               "MIT"
             ],
             "name": "node26",
-            "version": "26.12.1_1"
+            "version": "26.13.1"
           },
           {
             "licenses": [
@@ -699,7 +699,7 @@
               "BSD2CLAUSE"
             ],
             "name": "pkg",
-            "version": "2.8.4"
+            "version": "2.9.2"
           },
           {
             "licenses": [
@@ -721,7 +721,7 @@
               "PSFL"
             ],
             "name": "python312",
-            "version": "3.12.15"
+            "version": "3.12.16"
           },
           {
             "licenses": [
@@ -736,7 +736,7 @@
               "APACHE20"
             ],
             "name": "simdjson",
-            "version": "5.1.0"
+            "version": "5.1.1"
           },
           {
             "licenses": [
