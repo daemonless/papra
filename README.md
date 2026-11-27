@@ -13,6 +13,7 @@ Minimalist self-hosted document management platform (Paperless alternative) on F
 
 | | |
 |---|---|
+| **Port** | 1221 |
 | **Registry** | `ghcr.io/daemonless/papra` |
 | **Source** | [https://github.com/papra-hq/papra](https://github.com/papra-hq/papra) |
 | **Website** | [https://papra.app](https://papra.app) |
@@ -52,6 +53,8 @@ services:
       - AUTH_IS_REGISTRATION_ENABLED=true  # Set to false after creating your account to lock down signups
     volumes:
       - "/containers/papra/app_data:/app_data"
+    ports:
+      - "1221:1221"
     # always (not unless-stopped) so FreeBSD's podman rc.d auto-starts it at boot
     restart: always
 ```
@@ -95,6 +98,7 @@ services:
     name: papra
     options:
       - container: 'args:--pull'
+      - expose: '1221:1221 proto:tcp'
     oci:
       user: root
       environment:
@@ -135,6 +139,10 @@ OPTION from=ghcr.io/daemonless/papra:${tag}
 Save the files above, then run `appjail-director up`.
 
 
+> [!WARNING]
+> Exposing ports in AppJail means that your service can be reached from remote hosts. If that is not your intention, do not expose the ports and communicate with the service using the jail's IPv4 address or hostname assigned by the virtual network.
+>
+> To avoid exposing ports, just remove the `expose` option in your `appjail-director.yml` or from your command-line arguments.
 
 ### Bastille
 
@@ -169,6 +177,7 @@ services:
 ```
 
 Save as `bastille-compose.yml`, then run `bastille up`.
+Open `http://<server>:1221` from another machine (the server's own browser can't use a published port).
 
 ## Parameters
 
@@ -197,6 +206,12 @@ Save as `bastille-compose.yml`, then run `bastille up`.
 | Path | Description |
 |------|-------------|
 | `/app_data` | Application data — SQLite database, stored documents, and config |
+
+### Ports
+
+| Port | Protocol | Description |
+|------|----------|-------------|
+| `1221` | TCP | Web UI (nginx serving the SPA + reverse-proxying /api/ to the node backend) |
 
 **Architectures:** amd64
 **User:** `bsd` (UID/GID via PUID/PGID, defaults to 1000:1000)

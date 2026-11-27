@@ -41,7 +41,6 @@ services:
     image: ghcr.io/daemonless/papra:latest
     container_name: papra
     restart: unless-stopped
-    network_mode: host
 
     environment:
       - PUID=1000
@@ -66,3 +65,6 @@ services:
 
     volumes:
       - ./app_data:/app_data
+
+    ports:
+      - 1221:1221
